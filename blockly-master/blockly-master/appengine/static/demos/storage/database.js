@@ -33,7 +33,7 @@ function createNewUser(){
   if (user == null){
       return;
   }
-  var email = user.email;
+  var email = 'brandoncole673@gmail.com'
   var docRef = firestore.collection(USER_COLLECTION).doc(email);
   docRef.get().then(function(doc){
       if (doc.exists == false){
