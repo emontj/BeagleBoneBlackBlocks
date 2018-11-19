@@ -55,7 +55,7 @@ function storeLink(link){
        // return;
  //   }
     
-    var userDoc = firestore.collection(USER_COLLECTION).doc(user.email);
+    var userDoc = firestore.collection(USER_COLLECTION).doc('brandoncole673@gmail.com');
     userDoc.update({
         links: firebase.firestore.FieldValue.arrayUnion(link)
     })
