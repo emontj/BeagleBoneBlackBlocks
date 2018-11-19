@@ -140,7 +140,7 @@ BlocklyStorage.handleRequest_ = function() {
         window.location.hash = data;
         BlocklyStorage.alert(BlocklyStorage.LINK_ALERT.replace('%1',
             window.location.href));
-        storeLink(window.localStorage.href);
+        storeLink(window.location.href);
       } else if (BlocklyStorage.httpRequest_.name == 'key') {
         if (!data.length) {
           BlocklyStorage.alert(BlocklyStorage.HASH_ERROR.replace('%1',
