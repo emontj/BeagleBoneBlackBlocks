@@ -50,10 +50,10 @@ function createNewUser(){
  */
 function storeLink(link){
     var user = getCurrentUser();
-    if (user == null){
-        alert(USER_NOT_SIGNED_IN_MESSAGE);
-        return;
-    }
+  //  if (user == null){
+       // alert(USER_NOT_SIGNED_IN_MESSAGE);
+       // return;
+ //   }
     
     var userDoc = firestore.collection(USER_COLLECTION).doc(user.email);
     userDoc.update({
