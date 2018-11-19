@@ -29,11 +29,11 @@ function addUser(email){
  * @param {*} blocksLink 
  */
 function createNewUser(){
-  /*var user = getCurrentUser();
+  var user = getCurrentUser();
   if (user == null){
       return;
-  }*/
-  var email = 'brandoncole673@gmail.com'
+  }
+  var email = user.email;
   var docRef = firestore.collection(USER_COLLECTION).doc(email);
   docRef.get().then(function(doc){
       if (doc.exists == false){
@@ -50,12 +50,12 @@ function createNewUser(){
  */
 function storeLink(link){
     var user = getCurrentUser();
-  //  if (user == null){
-       // alert(USER_NOT_SIGNED_IN_MESSAGE);
-       // return;
- //   }
+    if (user == null){
+        alert(USER_NOT_SIGNED_IN_MESSAGE);
+        return;
+    }
     
-    var userDoc = firestore.collection(USER_COLLECTION).doc('brandoncole673@gmail.com');
+    var userDoc = firestore.collection(USER_COLLECTION).doc(user.email);
     userDoc.update({
         links: firebase.firestore.FieldValue.arrayUnion(link)
     })
