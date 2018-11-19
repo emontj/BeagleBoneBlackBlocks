@@ -29,10 +29,10 @@ function addUser(email){
  * @param {*} blocksLink 
  */
 function createNewUser(){
-  var user = getCurrentUser();
+  /*var user = getCurrentUser();
   if (user == null){
       return;
-  }
+  }*/
   var email = 'brandoncole673@gmail.com'
   var docRef = firestore.collection(USER_COLLECTION).doc(email);
   docRef.get().then(function(doc){
