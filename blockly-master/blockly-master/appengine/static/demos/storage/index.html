@@ -61,7 +61,7 @@
 
   <p>
     <button onclick="BlocklyStorage.link()">Save Blocks</button>
-    <button onclick="BlocklyStorage.link()">Download source code</button>
+    <button onclick="sendToBeagleBone()">Run on BeagleBone</button>
   </p>
 
   <div id="blocklyDiv" style="height: 480px; width: 600px;"></div>
@@ -106,6 +106,18 @@
     // An href with #key trigers an AJAX call to retrieve saved blocks.
     if ('BlocklyStorage' in window && window.location.hash.length > 1) {
       BlocklyStorage.retrieveXml(window.location.hash.substring(1));
+
+      function sendToBeagleBone(){
+        var code = Blockly.JavaScript.workspaceToCode(demoWorkspace);
+        $.ajax({
+          type : 'POST',
+          data: code,
+          url  : 'http://192.168.7.2:5050/',
+          success : function(response){
+            alert(response);
+          }
+        });
+      }
     }
   </script>
 
