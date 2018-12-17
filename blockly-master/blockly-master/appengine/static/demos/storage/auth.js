@@ -1,9 +1,9 @@
 
-function getCurrentUser(){
+function getUser(){
   return firebase.auth().currentUser;
 }
 
-function signOutCurrUser(){
+function signOut(){
   firebase.auth().signOut();
 }
 

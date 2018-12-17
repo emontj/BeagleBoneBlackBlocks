@@ -8,22 +8,16 @@
   <script src="https://www.gstatic.com/firebasejs/5.5.7/firebase-auth.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="./firebaseconfig.js"></script>
-  <script src="beaglebone.js"></script> 
   <script src="database.js"></script>
   <script src="auth.js"></script>
-  <script src="/storage.js"></script>
+  <script src="blocklyStorage.js"></script>
   <script src="../../blockly_compressed.js"></script>
   <script src="../../blocks_compressed.js"></script>
+  <script src="../../javascript_compressed.js"></script>
   <script src="../../msg/js/en.js"></script>
-  <script>
-      firebase.auth().onAuthStateChanged(function(user) {
-        if (user){
-          createNewUser();
-        }
-      });
-      </script>
+  <script src="beaglebone.js"></script>
+  <script src="index.js"></script>
   <style>
-    
     body {
       background-color: #fff;
       font-family: sans-serif;
@@ -44,6 +38,7 @@
     <a href="../index.html">Demos</a> &gt; Cloud Storage</h1>
 
   <p>This is a simple demo of cloud storage using App Engine.</p>
+  <div id="workspaces"></div>
 
   <script>
     if ('BlocklyStorage' in window) {
@@ -60,7 +55,7 @@
   <p>&rarr; More info on <a href="https://developers.google.com/blockly/guides/configure-blockly/web/cloud-storage">Cloud Storage</a>&hellip;</p>
 
   <p>
-    <button onclick="BlocklyStorage.link()">Save Blocks</button>
+    <button onclick="saveWorkspace()">Save Blocks</button>
     <button onclick="sendToBeagleBone()">Run on BeagleBone</button>
   </p>
 
@@ -96,9 +91,35 @@
       <block type="text_length"></block>
       <block type="text_print"></block>
     </category>
+    <category name="Beagle Bone" colour="%{BKY_TEXTS_HUE}">
+      <block type="led"></block>
+      <block type="state"></block>
+      <block type="light"></block>
+      <block type="get_temp"></block>
+      <block type="print_val"></block>
+      <block type="to_cel"></block>
+      <block type="print_cel"></block>
+      <block type="to_far"></block>
+      <block type="print_far"></block>
+      <block type="set_int"></block>
+      <block type="set_out"></block>
+    </category>
   </xml>
 
   <script>
+
+     function sendToBeagleBone(){
+      let url = 'https://192.168.7.2:5050';
+      let code = Blockly.JavaScript.workspaceToCode(demoWorkspace);
+      let config = {
+          method: 'POST',
+          body: code
+      }
+      fetch(url, config)
+      .then(res => res.json())
+      .then(data => console.log(data));
+    }
+      
     var demoWorkspace = Blockly.inject('blocklyDiv',
         {media: '../../media/',
          toolbox: document.getElementById('toolbox')});
@@ -106,18 +127,6 @@
     // An href with #key trigers an AJAX call to retrieve saved blocks.
     if ('BlocklyStorage' in window && window.location.hash.length > 1) {
       BlocklyStorage.retrieveXml(window.location.hash.substring(1));
-
-      function sendToBeagleBone(){
-        var code = Blockly.JavaScript.workspaceToCode(demoWorkspace);
-        $.ajax({
-          type : 'POST',
-          data: code,
-          url  : 'http://192.168.7.2:5050/',
-          success : function(response){
-            alert(response);
-          }
-        });
-      }
     }
   </script>
 

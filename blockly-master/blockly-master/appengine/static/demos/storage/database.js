@@ -1,86 +1,51 @@
-/**
- * Home for all functions and variables
- * that handle interactions with firebase
- * firestore.
- */
+const firestore = firebase.firestore();
+const USER_COLLECTION = 'users';
+const WORKSPACES_COLLECTION = 'workspaces';
+const workspaceName = 'testName';
+const testEmail = 'brandoncole673@gmail.com';
 
-var firestore = firebase.firestore(); // for firestore database access
+firestore.settings({
+    timestampsInSnapshots: true
+});
 
-const NEW_ENTRY_ADD_SUCCESS_MESSAGE = 'New entry added sucessfully'; 
-const USER_COLLECTION = 'users'; // collection for users in firestore
-const USER_NOT_SIGNED_IN_MESSAGE = 'Sign in before saving, please.';
+var Firestore = {};
 
+Firestore.uploadLink = function(workspaceLink) {
+    let userEmail = firebase.auth().currentUser.email;
 
+    let workspaceDocRef = firestore.collection(USER_COLLECTION)
+        .doc(userEmail).collection(WORKSPACES_COLLECTION)
+        .doc(workspaceName);
 
-function addUser(email){
-    firestore.collection(USER_COLLECTION).doc(email).set({
-        links : []
-    })
-    .then(function(){
-        alert('New user added');
-    })
-    .catch(function(error){
-        console.log(error);
-    });
-}
-/**
- * 
- * @param {*} userId 
- * @param {*} blocksLink 
- */
-function createNewUser(){
-  var user = getCurrentUser();
-  if (user == null){
-      return;
-  }
-  var email = user.email;
-  var docRef = firestore.collection(USER_COLLECTION).doc(email);
-  docRef.get().then(function(doc){
-      if (doc.exists == false){
-          addUser(email);
-      }
-  })
-  .catch(function(error){
-      console.log(error);
-  });
-}
-
-/**
- * 
- */
-function storeLink(link){
-    var user = getCurrentUser();
-    if (user == null){
-        alert(USER_NOT_SIGNED_IN_MESSAGE);
-        return;
-    }
-    
-    var userDoc = firestore.collection(USER_COLLECTION).doc(user.email);
-    userDoc.update({
-        links: firebase.firestore.FieldValue.arrayUnion(link)
-    })
-    .then(function(){
-        alert("Updated");
-    })
-    .catch(function(error){
-        alert(error);
+     return workspaceDocRef.set({
+        link : workspaceLink
     });
 }
 
-function displayLinks(links){
-    // TODO: display the links on webpage
+Firestore.nameIsTaken = async function nameIsTaken(workspaceName){
+    let {exists} = firestore.collection(USER_COLLECTION)
+        .doc(testEmail).collection(WORKSPACES_COLLECTION)
+        .doc(workspaceName).get();
+    return exists;
 }
 
-function getLinks(){
-    var user = getCurrentUser();
-    var docRef = firestore.collection(USER_COLLECTION).doc(user.email);
-    docRef.get().then(function(doc){
-        if (doc.exists){
-            var docData = doc.data();
-            displayLinks(docData.links);
-        }
-        else{
-            console.log('doc does not exist');
+ Firestore.getAllWorkspaces = async function(){
+    let {docs} = await firestore.collection(USER_COLLECTION)
+        .doc(testEmail).collection(WORKSPACES_COLLECTION).get();
+
+    return docs.map( doc => {
+        let workspace = doc.data();
+        return {
+            id : doc.id,
+            link : workspace.link
         }
     });
+}
+
+Firestore.getWorkspaceLink = async function(workspaceName){
+    let workspaceDoc = await firestore.collection(USER_COLLECTION)
+        .doc(testEmail).collection(WORKSPACES_COLLECTION)
+        .doc(workspaceName).get();
+    let {link} = workspaceDoc.data();
+    return link;
 }
