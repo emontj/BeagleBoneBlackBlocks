@@ -10,16 +10,12 @@ firestore.settings({
 
 var Firestore = {};
 
-Firestore.uploadLink = function(workspaceLink) {
+Firestore.uploadLink = function(name, link) {
     let userEmail = firebase.auth().currentUser.email;
-
     let workspaceDocRef = firestore.collection(USER_COLLECTION)
         .doc(userEmail).collection(WORKSPACES_COLLECTION)
-        .doc(workspaceName);
-
-     return workspaceDocRef.set({
-        link : workspaceLink
-    });
+        .doc(name);
+     return workspaceDocRef.set({link : link});
 }
 
 Firestore.nameIsTaken = async function nameIsTaken(workspaceName){

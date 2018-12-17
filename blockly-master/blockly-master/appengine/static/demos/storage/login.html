@@ -17,7 +17,7 @@
     <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.4.1/firebaseui.css" />
     <script type="text/javascript"></script>
     <script>
-      var uiConfig = {
+      let uiConfig = {
         'signInSuccessUrl': 'index.html',
         'signInOptions': [
           firebase.auth.GoogleAuthProvider.PROVIDER_ID,
@@ -28,7 +28,7 @@
           firebase.auth.PhoneAuthProvider.PROVIDER_ID
         ]
       };
-      var ui = new firebaseui.auth.AuthUI(firebase.auth());
+      let ui = new firebaseui.auth.AuthUI(firebase.auth());
       ui.start('#firebaseui-auth-container', uiConfig);
     </script>
   </head>
