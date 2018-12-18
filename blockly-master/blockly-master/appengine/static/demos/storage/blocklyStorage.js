@@ -87,14 +87,7 @@ BlocklyStorage.link = function(opt_workspace) {
 BlocklyStorage.storeWorkspace = async function(){
     let data = BlocklyStorage.getWorkspaceAsStr();
     data = 'xml=' + encodeURIComponent(data);
-    let response = await BlocklyStorage.sendWorkspace('/storage', data);
-    if (response.status !== 200){
-        console.log('not working');
-        return null;
-    }
-    let workspaceLink = response.text();
-    console.log(workspaceLink);
-    return workspaceLink;
+    return await BlocklyStorage.sendWorkspace('/storage', data);
 }
 
 BlocklyStorage.getWorkspaceAsStr = function() {
@@ -124,6 +117,9 @@ BlocklyStorage.sendWorkspace = async function(url, data){
         method : 'POST',
         body : data,
         headers : new Headers({'Content-Type' : 'application/x-www-form-urlencoded'})
+    }).then(response => {
+        if (response.ok){ return response.text(); }
+        throw Error(response.statusText);
     });
 }
 

@@ -10,18 +10,28 @@ firestore.settings({
 
 var Firestore = {};
 
+var usedWorkspaceNames = new Set();
+
 Firestore.uploadLink = function(name, link) {
     let userEmail = firebase.auth().currentUser.email;
     let workspaceDocRef = firestore.collection(USER_COLLECTION)
         .doc(userEmail).collection(WORKSPACES_COLLECTION)
         .doc(name);
-     return workspaceDocRef.set({link : link});
+     return workspaceDocRef.set({link : link}).then( () => {
+         usedWorkspaceNames.add(name);
+     });
 }
 
 Firestore.nameIsTaken = async function nameIsTaken(workspaceName){
-    let {exists} = firestore.collection(USER_COLLECTION)
+    if (usedWorkspaceNames.has(workspaceName)){
+        console.log('Document name is in cache');
+        return true;
+    }
+    let {exists} = await firestore.collection(USER_COLLECTION)
         .doc(testEmail).collection(WORKSPACES_COLLECTION)
         .doc(workspaceName).get();
+    console.log('Document found in firebase', exists);
+    if (exists){ usedWorkspaceNames.add(workspaceName); }
     return exists;
 }
 
