@@ -1,6 +1,7 @@
 const firestore = firebase.firestore();
 const USER_COLLECTION = 'users';
 const WORKSPACES_COLLECTION = 'workspaces';
+const NAMES_COLLECTION = 'names';
 const workspaceName = 'testName';
 const testEmail = 'brandoncole673@gmail.com';
 
@@ -8,50 +9,34 @@ firestore.settings({
     timestampsInSnapshots: true
 });
 
-var Firestore = {};
+let WorkspaceStorage = {};
 
-var usedWorkspaceNames = new Set();
-
-Firestore.uploadLink = function(name, link) {
-    let userEmail = firebase.auth().currentUser.email;
-    let workspaceDocRef = firestore.collection(USER_COLLECTION)
-        .doc(userEmail).collection(WORKSPACES_COLLECTION)
-        .doc(name);
-     return workspaceDocRef.set({link : link}).then( () => {
-         usedWorkspaceNames.add(name);
-     });
+function getWorkspaceDocReference(name) {
+    const documentPath = `${USER_COLLECTION}/${user.email}/${WORKSPACES_COLLECTION}/${name}`;
+    return firestore.doc(documentPath);
 }
 
-Firestore.nameIsTaken = async function nameIsTaken(workspaceName){
-    if (usedWorkspaceNames.has(workspaceName)){
-        console.log('Document name is in cache');
-        return true;
-    }
-    let {exists} = await firestore.collection(USER_COLLECTION)
-        .doc(testEmail).collection(WORKSPACES_COLLECTION)
-        .doc(workspaceName).get();
-    console.log('Document found in firebase', exists);
-    if (exists){ usedWorkspaceNames.add(workspaceName); }
-    return exists;
+function getNamesCollectionReference() {
+    const collectionPath = `${USER_COLLECTION}/${user.email}/${NAMES_COLLECTION}`;
+    return firestore.collection(collectionPath);
 }
 
- Firestore.getAllWorkspaces = async function(){
-    let {docs} = await firestore.collection(USER_COLLECTION)
-        .doc(testEmail).collection(WORKSPACES_COLLECTION).get();
+WorkspaceStorage.put = function(name, workspace) {
+    const documentReference = getWorkspaceDocReference(name);
+    documentReference.set( { workspace : workspace} );
+    const collectionReference = getNamesCollectionReference();
+    return collectionReference.add( { name : name } );
+};
 
-    return docs.map( doc => {
-        let workspace = doc.data();
-        return {
-            id : doc.id,
-            link : workspace.link
-        }
-    });
-}
+WorkspaceStorage.nameIsUsed = async function(name){
+   const documentReference = getWorkspaceDocReference(name);
+   const { exists } = await documentReference.get();
+   return exists;
+};
 
-Firestore.getWorkspaceLink = async function(workspaceName){
-    let workspaceDoc = await firestore.collection(USER_COLLECTION)
-        .doc(testEmail).collection(WORKSPACES_COLLECTION)
-        .doc(workspaceName).get();
-    let {link} = workspaceDoc.data();
-    return link;
-}
+WorkspaceStorage.getNames = async function() {
+    const collectionRef = getNamesCollectionReference();
+    const { docs } = await collectionRef.get();
+    return docs.map( doc => doc.id);
+};
+
