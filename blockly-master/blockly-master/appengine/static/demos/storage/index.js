@@ -1,28 +1,27 @@
+const BEAGLE_BONE_URL = 'https://192.168.7.2:5050';
+
 
 
 function displayWorkspaces(workspaces){
-    let workplaceDiv = document.getElementById("workspaces");
-    workspaces.forEach( workspace => {
-        workplaceDiv.insertAdjacentHTML('beforeend', `<a href=${workspace.link}>${workspace.id}</a>\n`)
-    });
+   //TODO Display workspace names on screen
 }
 
 async function saveWorkspace() {
-    let workspaceName = document.getElementById('name').value;
-    if (workspaceName === null || workspaceName === undefined || workspaceName === ''){
-        alert('NAME IS EMPTY');
-        return;
+  //TODO save workspace to to storage
+}
+
+async function sendToBeagleBone(){
+    const javascriptCode = Blockly.JavaScript.workspaceToCode(demoWorkspace);
+    const config = {
+        method: 'POST',
+        body: javascriptCode
+    };
+    const response = await fetch(BEAGLE_BONE_URL, config);
+    if (response.ok){
+        const jsonData = response.json();
+        console.log(jsonData['message']);
     }
-    let isTaken = await Firestore.nameIsTaken(workspaceName);
-    if (isTaken){
-        alert('NAME IS TAKE!');
-        return;
+    else{
+        console.log('Could not run on beaglebone');
     }
-    BlocklyStorage.storeWorkspace()
-        .then(link => {
-            return Firestore.uploadLink(workspaceName, link);
-        })
-        .catch(err => {
-            console.log(err);
-        });
 }
