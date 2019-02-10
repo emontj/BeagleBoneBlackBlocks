@@ -78,6 +78,7 @@ WorkspaceStorage.put = async function(workspace) {
         return false;
     }
     const workspaceAsDom = Blockly.Xml.workspaceToDom(workspace, true);
+    
     const hasOneBlockStack = workspace.getTopBlocks(false).length === 1
         && workspaceAsDom.querySelector;
 

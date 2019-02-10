@@ -108,22 +108,11 @@
   </xml>
 
   <script>
-
-     function sendToBeagleBone(){
-      let url = 'https://192.168.7.2:5050';
-      let code = Blockly.JavaScript.workspaceToCode(demoWorkspace);
-      let config = {
-          method: 'POST',
-          body: code
-      }
-      fetch(url, config)
-      .then(res => res.json())
-      .then(data => console.log(data));
-    }
-      
-    var demoWorkspace = Blockly.inject('blocklyDiv',
-        {media: '../../media/',
-         toolbox: document.getElementById('toolbox')});
+    const config = {
+        media: '../../media/',
+        toolbox: document.getElementById('toolbox')
+    };
+    const demoWorkspace = Blockly.inject('blocklyDiv', config);
 
     // An href with #key trigers an AJAX call to retrieve saved blocks.
     if ('WorkspaceStorage' in window && window.location.hash.length > 1) {
