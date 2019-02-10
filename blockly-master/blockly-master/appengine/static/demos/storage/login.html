@@ -10,14 +10,14 @@
     <script src="./firebaseconfig.js"></script>
     <script src="./auth.js"></script>
     
-    <script src="./database.js"></script>
+    <script src="keystorage.js"></script>
     <!-- To be able to use jquery -->
    
     <script src="https://cdn.firebase.com/libs/firebaseui/3.4.1/firebaseui.js"></script>
     <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.4.1/firebaseui.css" />
     <script type="text/javascript"></script>
     <script>
-      let uiConfig = {
+      const uiConfig = {
         'signInSuccessUrl': 'index.html',
         'signInOptions': [
           firebase.auth.GoogleAuthProvider.PROVIDER_ID,
@@ -28,7 +28,7 @@
           firebase.auth.PhoneAuthProvider.PROVIDER_ID
         ]
       };
-      let ui = new firebaseui.auth.AuthUI(firebase.auth());
+      const ui = new firebaseui.auth.AuthUI(firebase.auth());
       ui.start('#firebaseui-auth-container', uiConfig);
     </script>
   </head>
