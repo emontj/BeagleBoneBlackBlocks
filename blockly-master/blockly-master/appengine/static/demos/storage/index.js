@@ -13,7 +13,8 @@ async function sendToBeagleBone(){
 
     if (response.ok){
         const jsonData = await response.json();
-        console.log(jsonData['message']);
+        console.log(jsonData['response']);
+        document.getElementById("outputDiv").innerHTML(jsonData['response']);
     }
     else {
        // display error
