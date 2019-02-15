@@ -1,7 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: blocklystorage.js</title>
 
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: blocklystorage.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>
 'use strict';
 
-const CLOUD_STORAGE_PATH = '/storage';
+export let BlocklyStorage = {}; // to hold all functions in one placeS
+
+const CLOUD_STORAGE_URL = '/storage';
 const KEY_DATA_TYPE_NAME = 'key';
 const XML_DATA_TYPE_NAME = 'xml';
 
@@ -10,11 +40,11 @@ const XML_DATA_TYPE_NAME = 'xml';
  * @param {!Blockly.WorkspaceSvg} workspace Workspace.
  * @private
  */
-export function putInLocalStorage({workspaceName, workspace}) {
+export function putInLocalStorage(workspace) {
     if ( localStorageIsSupported() ) {
-        const domWorkspace = Blockly.Xml.workspaceToDom(workspace);
-        const xmlWorkspace = Blockly.Xml.domToText(domWorkspace);
-        localStorage.setItem(workspace, xmlWorkspace);
+        var xml = Blockly.Xml.workspaceToDom(workspace);
+        var url = getCurrentUrlNoHash();
+        window.localStorage.setItem(url, Blockly.Xml.domToText(xml));
     }
 };
 
@@ -31,7 +61,7 @@ function getCurrentUrlNoHash() {
  * @param {Blockly.WorkspaceSvg=} opt_workspace Workspace.
  */
 export function backupOnUnload(opt_workspace) {
-    const workspace = opt_workspace || Blockly.getMainWorkspace();
+    var workspace = opt_workspace || Blockly.getMainWorkspace();
     window.addEventListener('unload', () => {
         BlocklyStorage.putInLocalStorage(workspace);
     }, false);
@@ -42,8 +72,16 @@ export function backupOnUnload(opt_workspace) {
  * @param {Blockly.WorkspaceSvg=} opt_workspace Workspace.
  */
 export function getFromLocalStorage(workspaceName) {
-    return localStorage.getItem(workspaceName) || null;
+    let workspace = null;
+    if (isInLocalStorage(workspaceUrl)) {
+        workspace = Blockly.Xml.textToDom(window.localStorage[workspaceName]);
+    }
+    return workspace;
 };
+
+function isInLocalStorage(url) {
+    return localStorageIsSupported() &amp;&amp; window.localStorage[url];
+}
 
 /**
  * Stores workspace contents in cloud storage. Returns unique id for workspace.
@@ -52,25 +90,25 @@ export function getFromLocalStorage(workspaceName) {
  */
 export function putInCloud(workspace) {
     if (workspace === undefined || workspace === null) return null;
-    const xmlWorkspace = getWorkspaceAsXml(workspace);
+    let xmlWorkspace = getWorkspaceAsXml(workspace);
     return sendToCloudStoarge(XML_DATA_TYPE_NAME, xmlWorkspace);
 };
 
 function getWorkspaceAsXml(workspace) {
-    let workspaceAsDom = Blockly.Xml.workspaceToDom(workspace, true);
-    if (hasOneBlockStack(workspace, workspaceAsDom)) {
-        removeCoordinates(workspaceAsDom);  // There's no reason to store this,
-    }                                       // removing it helps with anonymity.
-    return Blockly.Xml.domToText(workspaceAsDom);
+    let blockAsXml = Blockly.Xml.workspaceToDom(workspace, true);
+    if (hasOneBlockStack(workspace, blockAsXml)) {
+        removeCoordinates(blockAsXml);  // There's no reason to store this,
+    }                           // removing it helps with anonymity.
+    return Blockly.Xml.domToText(blockAsXml);
 }
 
 function hasOneBlockStack(workspace, blocksAsXml) {
     return workspace.getTopBlocks(false).length === 1
-        && blocksAsXml.querySelector;
+        &amp;&amp; blocksAsXml.querySelector;
 }
 
 function removeCoordinates(xml) {
-    const block = xml.querySelector('block');
+    let block = xml.querySelector('block');
     if (block) {
         block.removeAttribute('x');
         block.removeAttribute('y');
@@ -81,23 +119,21 @@ function removeCoordinates(xml) {
  * Sends data to storage via http request
  * @param {String} dataType type of data to be sent
  * @param {String} data content
- * @returns {Promise<String>} returns key or xml depending on the type of data
+ * @returns {Promise&lt;String>} returns key or xml depending on the type of data
  * return null if bad response is returned.
  */
 async function sendToCloudStoarge(dataType, data) {
-    const requestSettings = getCloudRequestSettings(dataType, data);
-    const response = await fetch(CLOUD_STORAGE_PATH, requestSettings);
+    let requestSettings = getCloudRequestSettings(dataType, data);
+    let response = await fetch(CLOUD_STORAGE_URL, requestSettings);
     if (response.ok) { return response.text(); }
     console.log('Response error', response.statusText);
     return null;
 }
 
 function getCloudRequestSettings(dataType, data) {
-    const formData = new FormData();
-    formData.append(dataType, data);
     return {
         method: 'POST',
-        body: formData,
+        body: new FormData().append(dataType, data),
         headers: new Headers({ 'Content-Type': 'application/x-www-form-urlencoded' })
     };
 }
@@ -127,3 +163,26 @@ export function monitorChanges_(workspace) {
     var bindData = workspace.addChangeListener(change);
 };
 
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#backupOnUnload">backupOnUnload</a></li><li><a href="global.html#getFromLocalStorage">getFromLocalStorage</a></li><li><a href="global.html#putInCloud">putInCloud</a></li><li><a href="global.html#sendToCloudStoarge">sendToCloudStoarge</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Jan 06 2019 04:46:54 GMT-0500 (Eastern Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

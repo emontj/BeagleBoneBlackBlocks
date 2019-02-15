@@ -6,17 +6,15 @@
   <script src="https://www.gstatic.com/firebasejs/5.5.5/firebase-app.js"></script> 
   <script src="https://www.gstatic.com/firebasejs/5.5.5/firebase-firestore.js"></script>
   <script src="https://www.gstatic.com/firebasejs/5.5.7/firebase-auth.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script src="./firebaseconfig.js"></script>
-  <script src="database.js"></script>
-  <script src="auth.js"></script>
-  <script src="blocklyStorage.js"></script>
   <script src="../../blockly_compressed.js"></script>
   <script src="../../blocks_compressed.js"></script>
   <script src="../../javascript_compressed.js"></script>
+  <script src="../firebaseconfig.js"></script>
+  <script src="./workspacestorage.js"></script>
+  <script src="./index.js"></script>
+  <script src="./beaglebone.js"></script>
   <script src="../../msg/js/en.js"></script>
-  <script src="beaglebone.js"></script>
-  <script src="index.js"></script>
+
   <style>
     body {
       background-color: #fff;
@@ -39,29 +37,14 @@
 
   <p>This is a simple demo of cloud storage using App Engine.</p>
   <div id="workspaces"></div>
-
-  <script>
-    if ('BlocklyStorage' in window) {
-      BlocklyStorage.HTTPREQUEST_ERROR = 'There was a problem with the request.\n';
-      BlocklyStorage.LINK_ALERT = 'Share your blocks with this link:\n\n%1';
-      BlocklyStorage.HASH_ERROR = 'Sorry, "%1" doesn\'t correspond with any saved Blockly file.';
-      BlocklyStorage.XML_ERROR = 'Could not load your saved file.\n'+
-          'Perhaps it was created with a different version of Blockly?';
-    } else {
-      document.write('<p id="sorry">Sorry, cloud storage is not available.  This demo must be hosted on App Engine.</p>');
-    }
-  </script>
-
   <p>&rarr; More info on <a href="https://developers.google.com/blockly/guides/configure-blockly/web/cloud-storage">Cloud Storage</a>&hellip;</p>
 
   <p>
-    <button onclick="saveWorkspace()">Save Blocks</button>
-    <button onclick="sendToBeagleBone()">Run on BeagleBone</button>
+      <button id='save'>Save Blocks</button>
+      <button id='runOnBeagleBone'>Run on BeagleBone</button>
   </p>
-  <input type="text" id="name">
 
   <div id="blocklyDiv" style="height: 480px; width: 600px;"></div>
-
   <xml id="toolbox" style="display: none">
     <category name="Logic" colour="%{BKY_LOGIC_HUE}">
       <block type="controls_if"></block>
@@ -106,30 +89,6 @@
       <block type="set_out"></block>
     </category>
   </xml>
-
-  <script>
-
-     function sendToBeagleBone(){
-      let url = 'https://192.168.7.2:5050';
-      let code = Blockly.JavaScript.workspaceToCode(demoWorkspace);
-      let config = {
-          method: 'POST',
-          body: code
-      }
-      fetch(url, config)
-      .then(res => res.json())
-      .then(data => console.log(data));
-    }
-      
-    var demoWorkspace = Blockly.inject('blocklyDiv',
-        {media: '../../media/',
-         toolbox: document.getElementById('toolbox')});
-
-    // An href with #key trigers an AJAX call to retrieve saved blocks.
-    if ('BlocklyStorage' in window && window.location.hash.length > 1) {
-      BlocklyStorage.retrieveXml(window.location.hash.substring(1));
-    }
-  </script>
 
 </body>
 </html>

@@ -1,12 +1,5 @@
+export let user = 'brandoncole673@gmail.com';
 
-function getUser(){
-  return firebase.auth().currentUser;
-}
-
-function signOut(){
-  firebase.auth().signOut();
-}
-
-function isUserSignedIn(){
-  return currUser != null;
-}
+firebase.auth().onAuthStateChanged(currUser => {
+    user = currUser;
+});
