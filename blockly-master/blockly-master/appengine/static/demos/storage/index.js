@@ -1,4 +1,4 @@
-const BEAGLE_BONE_URL = 'https://192.168.7.2:5050';
+const BEAGLE_BONE_URL = 'http://192.168.7.2:5050';
 
 async function sendToBeagleBone(){
     
@@ -14,7 +14,7 @@ async function sendToBeagleBone(){
     if (response.ok){
         const jsonData = await response.json();
         console.log(jsonData['response']);
-        document.getElementById("outputDiv").innerHTML(jsonData['response']);
+        document.getElementById("outputDiv").innerHTML= jsonData['response'];
     }
     else {
        // display error

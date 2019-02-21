@@ -2,9 +2,13 @@ const http = require('http');
 
 const MAX_DATA_SIZE = 1e6;
 const PORT_NUMBER = 5050;
-const SERVER_URL = `http://192.168.7.2:${PORT_NUMBER}`;
-const OKAY = 200;
-const POST_REQUEST = 'POST;';
+const BEAGLE_SERVER_IP = 'http://192.168.7.2';
+const SERVER_URL = `${BEAGLE_SERVER_IP}:${PORT_NUMBER}`;
+const POST_REQUEST = 'POST';
+const HEADERS = {
+    'Content-Type': 'application/json',
+    'Access-Control-Allow-Origin' : '*'
+}
 
 const server = http.createServer((request, response) => {
 
@@ -13,7 +17,7 @@ const server = http.createServer((request, response) => {
         let dataSize = 0;
 
         request.on('data', data => {
-            dataSize += data.length();
+            dataSize += data.length;
             if (dataSize >= MAX_DATA_SIZE){
                 response.connection.destroy();
             }
@@ -22,9 +26,9 @@ const server = http.createServer((request, response) => {
 
         request.on('end', () => {
             const code = Buffer.concat(body).toString();
-            const result = new Function(code);
-
-            response.writeHead(200, 'Content-Type', 'application/json');
+            const userFunction = new Function(code);
+            const result = userFunction();
+            response.writeHead(200, HEADERS);
             const resposneData = JSON.stringify({ 'response' : result });
             response.end( resposneData );
         });

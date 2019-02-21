@@ -6,16 +6,12 @@
   <script src="https://www.gstatic.com/firebasejs/5.5.5/firebase-app.js"></script> 
   <script src="https://www.gstatic.com/firebasejs/5.5.5/firebase-firestore.js"></script>
   <script src="https://www.gstatic.com/firebasejs/5.5.7/firebase-auth.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="./firebaseconfig.js"></script>
   <script src="keystorage.js"></script>
   <script src="auth.js"></script>
-  <script src="workspacestorage.js"></script>
   <script src="../../blockly_compressed.js"></script>
   <script src="../../blocks_compressed.js"></script>
   <script src="../../javascript_compressed.js"></script>
-  <script src="../firebaseconfig.js"></script>
-  <script src="./workspacestorage.js"></script>
   <script src="./index.js"></script>
   <script src="./beaglebone.js"></script>
   <script src="../../msg/js/en.js"></script>
@@ -42,32 +38,12 @@
 
   <p>This is a simple demo of cloud storage using App Engine.</p>
   <div id="workspaces"></div>
-<<<<<<< HEAD
-  <p>&rarr; More info on <a href="https://developers.google.com/blockly/guides/configure-blockly/web/cloud-storage">Cloud Storage</a>&hellip;</p>
-
-  <p>
-      <button id='save'>Save Blocks</button>
-      <button id='runOnBeagleBone'>Run on BeagleBone</button>
-=======
-
-  <script>
-    if ('WorkspaceStorage' in window) {
-      WorkspaceStorage.HTTPREQUEST_ERROR = 'There was a problem with the request.\n';
-      WorkspaceStorage.LINK_ALERT = 'Share your blocks with this link:\n\n%1';
-      WorkspaceStorage.HASH_ERROR = 'Sorry, "%1" doesn\'t correspond with any saved Blockly file.';
-      WorkspaceStorage.XML_ERROR = 'Could not load your saved file.\n'+
-          'Perhaps it was created with a different version of Blockly?';
-    } else {
-      document.write('<p id="sorry">Sorry, cloud storage is not available.  This demo must be hosted on App Engine.</p>');
-    }
-  </script>
 
   <p>&rarr; More info on <a href="https://developers.google.com/blockly/guides/configure-blockly/web/cloud-storage">Cloud Storage</a>&hellip;</p>
 
   <p>
     <button onclick="testStoreWorkspace()">Save Blocks</button>
     <button onclick="sendToBeagleBone()">Run on BeagleBone</button>
->>>>>>> 51096a8f8379e3cdd0f5eea5b97c99f4507e375e
   </p>
 
   <div id="blocklyDiv" style="height: 480px; width: 600px;"></div>
@@ -102,6 +78,7 @@
       <block type="text_print"></block>
     </category>
     <category name="Beagle Bone" colour="%{BKY_TEXTS_HUE}">
+      <block type="print"></block>
       <block type="led"></block>
       <block type="state"></block>
       <block type="light"></block>
@@ -119,14 +96,12 @@
   <div id="jsCodeDiv" style="height: 240px; width: 600px;"> </div>
   <div id="outputDiv" style="height: 240px; width: 600px;"> </div>
 
-<<<<<<< HEAD
-=======
   <script>
-    const config = {
+    const configs = {
         media: '../../media/',
         toolbox: document.getElementById('toolbox')
     };
-    const demoWorkspace = Blockly.inject('blocklyDiv', config);
+    const demoWorkspace = Blockly.inject('blocklyDiv', configs);
 
     // An href with #key trigers an AJAX call to retrieve saved blocks.
     if ('WorkspaceStorage' in window && window.location.hash.length > 1) {
@@ -134,6 +109,5 @@
     }
   </script>
 
->>>>>>> 51096a8f8379e3cdd0f5eea5b97c99f4507e375e
 </body>
 </html>

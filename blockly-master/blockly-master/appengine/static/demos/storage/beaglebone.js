@@ -237,3 +237,25 @@ Blockly.JavaScript['set_out'] = function(block) {
   return code;
 };
 
+Blockly.Blocks['print'] = {
+  init: function() {
+    this.appendValueInput("NAME")
+        .setCheck(null)
+        .appendField("print");
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(230);
+ this.setTooltip("");
+ this.setHelpUrl("");
+  }
+};
+
+Blockly.JavaScript['print'] = function(block) {
+  // TODO: Assemble JavaScript into code variable.
+  var code = "return " + 
+  (Blockly.JavaScript.valueToCode(block, "NAME", Blockly.JavaScript.ORDER_NONE) || "''") + ";\n";
+  return code;
+
+};
+
+
