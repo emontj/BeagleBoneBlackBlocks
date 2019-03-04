@@ -12,9 +12,10 @@
   <script src="../../blockly_compressed.js"></script>
   <script src="../../blocks_compressed.js"></script>
   <script src="../../javascript_compressed.js"></script>
-  <script src="./index.js"></script>
+  <script src="./index.js" type="module"></script>
   <script src="./beaglebone.js"></script>
   <script src="../../msg/js/en.js"></script>
+  
 
   <style>
     body {
@@ -36,14 +37,13 @@
   <h1><a href="https://developers.google.com/blockly/">Blockly</a> &gt;
     <a href="../index.html">Demos</a> &gt; Cloud Storage</h1>
 
-  <p>This is a simple demo of cloud storage using App Engine.</p>
+  
   <div id="workspaces"></div>
-
-  <p>&rarr; More info on <a href="https://developers.google.com/blockly/guides/configure-blockly/web/cloud-storage">Cloud Storage</a>&hellip;</p>
-
   <p>
     <button onclick="testStoreWorkspace()">Save Blocks</button>
     <button onclick="sendToBeagleBone()">Run on BeagleBone</button>
+    <button onclick="downloadAsFile()">Download as Javascript file</button>
+    <button id="hi" > test</button>
   </p>
 
   <div id="blocklyDiv" style="height: 480px; width: 600px;"></div>
@@ -91,6 +91,8 @@
       <block type="set_int"></block>
       <block type="set_out"></block>
     </category>
+    <category name="Variables" colour="%{BKY_VARIABLES_HUE}" custom="VARIABLE"></category>
+
   </xml>
  
   <div id="jsCodeDiv" style="height: 240px; width: 600px;"> </div>

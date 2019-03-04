@@ -252,8 +252,8 @@ Blockly.Blocks['print'] = {
 
 Blockly.JavaScript['print'] = function(block) {
   // TODO: Assemble JavaScript into code variable.
-  var code = "return " + 
-  (Blockly.JavaScript.valueToCode(block, "NAME", Blockly.JavaScript.ORDER_NONE) || "''") + ";\n";
+  var code = "console.log(" + 
+  (Blockly.JavaScript.valueToCode(block, "NAME", Blockly.JavaScript.ORDER_NONE) || "''") + ");\n";
   return code;
 
 };

@@ -1,8 +1,10 @@
 const http = require('http');
 
 const MAX_DATA_SIZE = 1e6;
-const PORT_NUMBER = 5050;
-const SERVER_URL = 'http://192.168.7.2:5050';
+//const PORT_NUMBER = 5050;
+//const SERVER_URL = 'http://192.168.7.2:5050';
+const PORT_NUMBER = 3000;
+const SERVER_URL = 'http://127.0.0.1:3000';
 const POST_REQUEST = 'POST';
 const HEADERS = {
     'Content-Type': 'application/json',
