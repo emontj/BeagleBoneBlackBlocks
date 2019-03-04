@@ -12,26 +12,27 @@ function getKeyReference(workpsaceName) {
 }
 
 function getKeyCollectionReference() {
+    const {email} = firebase.auth().user;
     const keysCollectionPath = `${USER_COLLECTION}/${email}/${KEY_COLLECTION}`;
     return firestore.collection(keysCollectionPath);
 
 }
 
-KeyStorage.put = async function(name, key) {
-    if (name == null || key == null) {
+KeyStorage.put = async function(workspaceName, workspaceKey) {
+    if (workspaceName == null || workspaceKey == null) {
         return false;
     }
 
-    const keyReference = getKeyReference(name);
-    await keyReference.set( { key } );
+    const keyReference = getKeyReference(workspaceName);
+    await keyReference.set( { key: workspaceKey } );
     return true;
 };
 
-KeyStorage.get = async function(name) {
-    if (name == null){
+KeyStorage.get = async function(workspaceName) {
+    if (workspaceName == null){
         return null;
     }
-    const documentReference = getKeyReference(name);
+    const documentReference = getKeyReference(workspaceName);
     const { doc } = await documentReference.get();
     return doc.get('key');
 };
