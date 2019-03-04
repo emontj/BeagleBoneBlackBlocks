@@ -19,7 +19,7 @@ function getKeyCollectionReference() {
 }
 
 KeyStorage.put = async function(workspaceName, workspaceKey) {
-    if (workspaceName == null || workspaceKey == null) {
+    if (!(workspaceName && workspaceKey)) {
         return false;
     }
 
@@ -29,12 +29,12 @@ KeyStorage.put = async function(workspaceName, workspaceKey) {
 };
 
 KeyStorage.get = async function(workspaceName) {
-    if (workspaceName == null){
+    if (workspaceName == null) {
         return null;
     }
     const documentReference = getKeyReference(workspaceName);
     const { doc } = await documentReference.get();
-    return doc.get('key');
+    return doc.get('key') || null;
 };
 
 KeyStorage.nameIsUsed = async function(name) {
@@ -47,7 +47,7 @@ KeyStorage.nameIsUsed = async function(name) {
 };
 
  KeyStorage.getWorkspaceData = async function(){
-     const collectionReference = getKeyCollectionReference(name);
+     const collectionReference = getKeyCollectionReference();
      const { docs } = await collectionReference.get();
      return docs.map(docToWorkspaceData);
 };
