@@ -7,8 +7,8 @@
   <script src="https://www.gstatic.com/firebasejs/5.5.5/firebase-firestore.js"></script>
   <script src="https://www.gstatic.com/firebasejs/5.5.7/firebase-auth.js"></script>
   <script src="./firebaseconfig.js"></script>
+  <script src="blocklystorage.js"></script>
   <script src="keystorage.js"></script>
-  <script src="auth.js"></script>
   <script src="../../blockly_compressed.js"></script>
   <script src="../../blocks_compressed.js"></script>
   <script src="../../javascript_compressed.js"></script>
@@ -42,8 +42,8 @@
   <p>&rarr; More info on <a href="https://developers.google.com/blockly/guides/configure-blockly/web/cloud-storage">Cloud Storage</a>&hellip;</p>
 
   <p>
-    <button onclick="testStoreWorkspace()">Save Blocks</button>
-    <button onclick="sendToBeagleBone()">Run on BeagleBone</button>
+    <button id='save-button'>Save Blocks</button>
+    <button id='run-button'>Run on BeagleBone</button>
   </p>
 
   <div id="blocklyDiv" style="height: 480px; width: 600px;"></div>
@@ -90,6 +90,7 @@
       <block type="print_far"></block>
       <block type="set_int"></block>
       <block type="set_out"></block>
+      <block type="spin_servo"></block>
     </category>
   </xml>
  

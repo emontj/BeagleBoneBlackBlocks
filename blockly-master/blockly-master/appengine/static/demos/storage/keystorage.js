@@ -2,18 +2,20 @@ const firestore = firebase.firestore();
 const USER_COLLECTION = 'users';
 const KEY_COLLECTION = 'keys';
 
+
+
 firestore.settings( { timestampsInSnapshots: true } );
 const KeyStorage = {};
 
 function getKeyReference(workpsaceName) {
-    const {email} = firebase.auth().user;
-    const keyPath = `${USER_COLLECTION}/${email}/${KEY_COLLECTION}/${workpsaceName}`;
+    const userEmail = firebase.auth().currentUser.email;
+    const keyPath = `${USER_COLLECTION}/${userEmail}/${KEY_COLLECTION}/${workpsaceName}`;
     return firestore.doc(keyPath);
 }
 
 function getKeyCollectionReference() {
-    const {email} = firebase.auth().user;
-    const keysCollectionPath = `${USER_COLLECTION}/${email}/${KEY_COLLECTION}`;
+    const userEmail = firebase.auth().currentUser.email;
+    const keysCollectionPath = `${USER_COLLECTION}/${userEmail}/${KEY_COLLECTION}`;
     return firestore.collection(keysCollectionPath);
 
 }

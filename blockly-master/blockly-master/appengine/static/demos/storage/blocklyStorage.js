@@ -1,16 +1,17 @@
 
 'use strict';
 
-const CLOUD_STORAGE_PATH = '/storage';
+const STORAGE_URL = '/storage';
 const KEY_DATA_TYPE_NAME = 'key';
 const XML_DATA_TYPE_NAME = 'xml';
 
+const BlocklyStorage = {}
 /**
  * Backup code blocks to localStorage.
  * @param {!Blockly.WorkspaceSvg} workspace Workspace.
  * @private
  */
-export function putInLocalStorage({workspaceName, workspace}) {
+function putInLocalStorage({workspaceName, workspace}) {
     if ( localStorageIsSupported() ) {
         const domWorkspace = Blockly.Xml.workspaceToDom(workspace);
         const xmlWorkspace = Blockly.Xml.domToText(domWorkspace);
@@ -30,7 +31,7 @@ function getCurrentUrlNoHash() {
  * Bind the localStorage backup function to the unload event.
  * @param {Blockly.WorkspaceSvg=} opt_workspace Workspace.
  */
-export function backupOnUnload(opt_workspace) {
+function backupOnUnload(opt_workspace) {
     const workspace = opt_workspace || Blockly.getMainWorkspace();
     window.addEventListener('unload', () => {
         BlocklyStorage.putInLocalStorage(workspace);
@@ -41,7 +42,7 @@ export function backupOnUnload(opt_workspace) {
  * Restore code blocks from localStorage.
  * @param {Blockly.WorkspaceSvg=} opt_workspace Workspace.
  */
-export function getFromLocalStorage(workspaceName) {
+function getFromLocalStorage(workspaceName) {
     return localStorage.getItem(workspaceName) || null;
 };
 
@@ -50,7 +51,7 @@ export function getFromLocalStorage(workspaceName) {
  * @param {object} workspace workspace to be stored in cloud
  * @returns {String} 6 charcter string. Unique id for workspace
  */
-export function putInCloud(workspace) {
+BlocklyStorage.putInCloud = function(workspace) {
     if (workspace === undefined || workspace === null) return null;
     const xmlWorkspace = getWorkspaceAsXml(workspace);
     return sendToCloudStoarge(XML_DATA_TYPE_NAME, xmlWorkspace);
@@ -86,7 +87,7 @@ function removeCoordinates(xml) {
  */
 async function sendToCloudStoarge(dataType, data) {
     const requestSettings = getCloudRequestSettings(dataType, data);
-    const response = await fetch(CLOUD_STORAGE_PATH, requestSettings);
+    const response = await fetch(STORAGE_URL, requestSettings);
     if (response.ok) { return response.text(); }
     console.log('Response error', response.statusText);
     return null;
@@ -102,7 +103,7 @@ function getCloudRequestSettings(dataType, data) {
     };
 }
 
-export function getFromCloud(key) {
+function getFromCloud(key) {
     return sendToCloudStoarge(KEY_DATA_TYPE_NAME, key);
 };
 
@@ -113,7 +114,7 @@ export function getFromCloud(key) {
  * @param {!Blockly.WorkspaceSvg} workspace Workspace.
  * @private
  */
-export function monitorChanges_(workspace) {
+function monitorChanges_(workspace) {
     var startXmlDom = Blockly.Xml.workspaceToDom(workspace);
     var startXmlText = Blockly.Xml.domToText(startXmlDom);
     function change() {
