@@ -1,11 +1,13 @@
-
 'use strict';
 
 const STORAGE_URL = '/storage';
 const KEY_DATA_TYPE_NAME = 'key';
 const XML_DATA_TYPE_NAME = 'xml';
 
-const BlocklyStorage = {}
+const BlocklyStorage = {
+    put : put,
+    get : get
+}
 /**
  * Backup code blocks to localStorage.
  * @param {!Blockly.WorkspaceSvg} workspace Workspace.
@@ -51,7 +53,7 @@ function getFromLocalStorage(workspaceName) {
  * @param {object} workspace workspace to be stored in cloud
  * @returns {String} 6 charcter string. Unique id for workspace
  */
-BlocklyStorage.putInCloud = function(workspace) {
+function put(workspace) {
     if (workspace === undefined || workspace === null) return null;
     const xmlWorkspace = getWorkspaceAsXml(workspace);
     return sendToCloudStoarge(XML_DATA_TYPE_NAME, xmlWorkspace);
@@ -103,7 +105,7 @@ function getCloudRequestSettings(dataType, data) {
     };
 }
 
-function getFromCloud(key) {
+function get(key) {
     return sendToCloudStoarge(KEY_DATA_TYPE_NAME, key);
 };
 

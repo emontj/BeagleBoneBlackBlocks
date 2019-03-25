@@ -92,7 +92,7 @@ async function loadWorkspace() {
     } else {
         const workspaceKey = await KeyStorage.get(workspaceName);
         if (workspaceKey != null) {
-            const blocks = await BlocklyStorage.getFromCloud(workspaceKey);
+            const blocks = await BlocklyStorage.get(workspaceKey);
             if (blocks != null) {
                 const blocksAsDom = Blockly.Xml.textToDom(blocks);
                 const currentWorkspace = Blockly.getMainWorkspace();
