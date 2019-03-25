@@ -3,58 +3,98 @@ const USER_COLLECTION = 'users';
 const KEY_COLLECTION = 'keys';
 
 firestore.settings( { timestampsInSnapshots: true } );
-const KeyStorage = {};
 
-function getKeyReference(workpsaceName) {
-    const {email} = firebase.auth().user;
-    const keyPath = `${USER_COLLECTION}/${email}/${KEY_COLLECTION}/${workpsaceName}`;
+const KeyStorage = {
+    put : put,
+    get : getKey,
+    workspaceExist : workspaceNameExist,
+    getAll : getAll
+};
+
+
+/**
+ * creates a DocumentReference to a document
+ * @param {String} workpsaceName name of workspace
+ * @returns {{id : String, path : String}} reference to a document
+ * that can be used to read write or listen to the location
+ */
+function createDocumentReference(workpsaceName) {
+    const userEmail = firebase.auth().currentUser.email;
+    console.log(`Current user email: ${userEmail}`);
+    const keyPath = `${USER_COLLECTION}/${userEmail}/${KEY_COLLECTION}/${workpsaceName}`;
     return firestore.doc(keyPath);
 }
 
-function getKeyCollectionReference() {
-    const {email} = firebase.auth().user;
-    const keysCollectionPath = `${USER_COLLECTION}/${email}/${KEY_COLLECTION}`;
+/**
+ * creates a reference to a collection
+ * @returns
+ */
+function createCollectionReference() {
+    const userEmail = firebase.auth().currentUser.email;
+    console.log(`Current user email: ${userEmail}`);
+    const keysCollectionPath = `${USER_COLLECTION}/${userEmail}/${KEY_COLLECTION}`;
     return firestore.collection(keysCollectionPath);
-
 }
 
-KeyStorage.put = async function(workspaceName, workspaceKey) {
+/**
+ * Stores workspace key in database.
+ * @param {String} workspaceName name of workspace
+ * @param {String} workspaceKey unique id for workspace
+ * @returns {boolean} true if succeeded. False otherwise.
+ */
+async function put(workspaceName, workspaceKey) {
     if (!(workspaceName && workspaceKey)) {
         return false;
     }
-
-    const keyReference = getKeyReference(workspaceName);
-    await keyReference.set( { key: workspaceKey } );
+    const documentReference = createDocumentReference(workspaceName);
+    await documentReference.set( { key : workspaceKey } );
     return true;
 };
 
-KeyStorage.get = async function(workspaceName) {
+/**
+ * Retrieves key from database.
+ * @param {String} workspaceName name of workspace
+ * @returns {String} unique id for the workspace.
+ */
+async function getKey(workspaceName) {
     if (workspaceName == null) {
         return null;
     }
-    const documentReference = getKeyReference(workspaceName);
+    const documentReference = createDocumentReference(workspaceName);
     const { doc } = await documentReference.get();
     return doc.get('key') || null;
 };
 
-KeyStorage.nameIsUsed = async function(name) {
+/**
+ * Checks if the workspace name already exist.
+ * @param {String} name name of workspace
+ * @returns {boolean} true if exist. False otherwise.
+ */
+async function workspaceNameExist(name) {
     if (name == null){
         return null;
     }
-    const documentReference = getKeyReference(name);
+    const documentReference = createDocumentReference(name);
     const { exists } = await documentReference.get();
     return exists;
 };
 
- KeyStorage.getWorkspaceData = async function(){
-     const collectionReference = getKeyCollectionReference();
+/**
+ * Returns all keys and names of the users workspaces.
+ * @returns {Promise< { key : String, name : String } []> }
+ * objects that contain all of users workspaces data
+ */
+async function getAll(){
+     const collectionReference = createCollectionReference();
      const { docs } = await collectionReference.get();
      return docs.map(docToWorkspaceData);
 };
 
- function docToWorkspaceData(doc) {
+function docToWorkspaceData(doc) {
      return {
          'name' : doc.id,
          'key' : doc.get('key')
      };
  }
+
+ 
