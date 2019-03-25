@@ -1,9 +1,9 @@
 const BEAGLE_BONE_URL = 'http://127.0.0.1:3000';
 
 
-window.onload = () => {
+document.addEventListener("DOMContentLoaded", () => {
     init();
-};
+});
 
 
 function init() {
