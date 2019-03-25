@@ -6,12 +6,24 @@ window.onload = () => {
 };
 
 
-function init(){
+function init() {
+    
     const saveButton = document.getElementById('save-button');
     saveButton.addEventListener('click', saveWorkspace);
 
     const runButton = document.getElementById('run-button');
     runButton.addEventListener('click', sendToBeagleBone);
+
+    const configs = {
+        media: '../../media/',
+        toolbox: document.getElementById('toolbox')
+    };
+    const demoWorkspace = Blockly.inject('blocklyDiv', configs);
+
+    // An href with #key trigers an AJAX call to retrieve saved blocks.
+    if ('WorkspaceStorage' in window && window.location.hash.length > 1) {
+      WorkspaceStorage.retrieveXml(window.location.hash.substring(1));
+    }
 }
 
 async function sendToBeagleBone(){
@@ -44,7 +56,6 @@ async function saveWorkspace() {
     const workspaceKey = 'testKey';
     const workspaceName = 'testName';
     const keyDidSave = await KeyStorage.put(workspaceName, workspaceKey);
-
 
     if (workspaceKey != null){
         const workspaceName = getWorkspaceName();
