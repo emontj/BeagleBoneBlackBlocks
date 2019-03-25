@@ -61,8 +61,8 @@ async function getKey(workspaceName) {
         return null;
     }
     const documentReference = createDocumentReference(workspaceName);
-    const { doc } = await documentReference.get();
-    return doc.get('key') || null;
+    const snapshot = await documentReference.get();
+    return snapshot.get('key') || null;
 };
 
 /**

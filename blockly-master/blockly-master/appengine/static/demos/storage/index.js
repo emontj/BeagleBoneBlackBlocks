@@ -1,33 +1,37 @@
 const BEAGLE_BONE_URL = 'http://127.0.0.1:3000';
 
+document.addEventListener("DOMContentLoaded",  () => {
+    firebase.auth().onAuthStateChanged(function (user) {
+      if(user){
+        // localStorage.setItem('email',user.email);
+        init();
+      }else{
+        console.log("Shitttyyy")
+      }
+      
+    });
 
-document.addEventListener("DOMContentLoaded", () => {
-    init();
-});
+  });
 
 
 function init() {
-    
+
     const saveButton = document.getElementById('save-button');
     saveButton.addEventListener('click', saveWorkspace);
 
     const runButton = document.getElementById('run-button');
     runButton.addEventListener('click', sendToBeagleBone);
 
-    const configs = {
-        media: '../../media/',
-        toolbox: document.getElementById('toolbox')
-    };
-    const demoWorkspace = Blockly.inject('blocklyDiv', configs);
+    loadWorkspace();
 
     // An href with #key trigers an AJAX call to retrieve saved blocks.
     if ('WorkspaceStorage' in window && window.location.hash.length > 1) {
-      WorkspaceStorage.retrieveXml(window.location.hash.substring(1));
+        WorkspaceStorage.retrieveXml(window.location.hash.substring(1));
     }
 }
 
-async function sendToBeagleBone(){
-    
+async function sendToBeagleBone() {
+
     const javascriptCode = Blockly.JavaScript.workspaceToCode(demoWorkspace);
 
     const config = {
@@ -37,14 +41,14 @@ async function sendToBeagleBone(){
 
     const response = await fetch(BEAGLE_BONE_URL, config);
 
-    if (response.ok){
+    if (response.ok) {
         const jsonData = await response.json();
         console.log(jsonData['response']);
-        document.getElementById("outputDiv").innerHTML= jsonData['response'];
-        document.getElementById("jsCodeDiv").innerHTML= javascriptCode;
+        document.getElementById("outputDiv").innerHTML = jsonData['response'];
+        document.getElementById("jsCodeDiv").innerHTML = javascriptCode;
     }
     else {
-       // display error
+        // display error
     }
 }
 
@@ -58,9 +62,9 @@ async function saveWorkspace() {
     const workspaceName = 'testName';
     const keyDidSave = await KeyStorage.put(workspaceName, workspaceKey);
 
-    if (workspaceKey != null){
+    if (workspaceKey != null) {
         const workspaceName = getWorkspaceName();
-       
+
 
         if (keyDidSave) {
             // let user know it saved.
@@ -74,31 +78,34 @@ async function saveWorkspace() {
     }
 }
 
-function getWorkspaceName() {
-    let workspaceName = undefined;
-    const workspaceNameHtml = document.getElementById('workspaceName');
-    if (workspaceNameHtml != null) {
-        workspaceName = workspaceNameHtml.textContent;
-    }
-    return workspaceName;
-}
 
-async function restoreWorkspace() {
-    const workspaceName = getWorkspaceName();
-    const workspaceKey = await KeyStorage.get(workspaceName);
+async function loadWorkspace() {
+    const workspaceName = localStorage.getItem('workspaceName');
 
-    if (workspaceKey != null) {
-        const workspaceAsString = await BlocklyStorage.getFromCloud(workspaceKey);
-        if (workspaceAsString != null) {
-            const workspaceAsDom = Blockly.Xml.textToDom(workspaceAsString);
-            const currentWorkspace = Blockly.getMainWorkspace();
-            Blockly.Xml.domToWorkspace(currentWorkspace, workspaceAsDom);
+    if (!workspaceName) {
+        const configs = {
+            media: '../../media/',
+            toolbox: document.getElementById('toolbox')
+        };
+        const demoWorkspace = Blockly.inject('blocklyDiv', configs);
+
+    } else {
+        const workspaceKey = await KeyStorage.get(workspaceName);
+        if (workspaceKey != null) {
+            const blocks = await BlocklyStorage.getFromCloud(workspaceKey);
+            if (blocks != null) {
+                const blocksAsDom = Blockly.Xml.textToDom(blocks);
+                const currentWorkspace = Blockly.getMainWorkspace();
+                Blockly.Xml.domToWorkspace(currentWorkspace, blocksAsDom);
+            }
+            else {
+                // bad tings
+            }
         }
         else {
-            // bad tings
+            //bad things
         }
     }
-    else {
-        // bad tings
-    }
+
+
 }

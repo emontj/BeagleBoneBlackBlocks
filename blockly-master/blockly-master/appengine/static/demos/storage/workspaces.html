@@ -51,6 +51,7 @@
     document.addEventListener("DOMContentLoaded",  () => {
       firebase.auth().onAuthStateChanged(function (user) {
         if(user){
+          // localStorage.setItem('email',user.email);
           init();
         }else{
           console.log("Shitttyyy")
@@ -60,10 +61,17 @@
 
     });
 
+
+
     async function init(){
       const workspaces = await KeyStorage.getAll();
         workspaces.forEach(element => {
-          const workspace = document.createElement("DIV");
+          const workspace = document.createElement("A")
+          workspace.onclick = function() {
+            localStorage.setItem('workspaceName', element.name);
+            console.log('Opened index.html for: ' + element.name + ' workspace');
+          };
+          workspace.href = "index.html" ;
           const name = document.createTextNode(element.name);
           workspace.appendChild(name);
           document.getElementById("workspaces").appendChild(workspace);
