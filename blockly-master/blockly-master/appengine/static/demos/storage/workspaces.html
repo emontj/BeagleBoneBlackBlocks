@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="utf-8">
   <title>Blockly Demo: Cloud Storage</title>
-  <script src="https://www.gstatic.com/firebasejs/5.5.5/firebase-app.js"></script> 
+  <script src="https://www.gstatic.com/firebasejs/5.5.5/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/5.5.5/firebase-firestore.js"></script>
   <script src="https://www.gstatic.com/firebasejs/5.5.7/firebase-auth.js"></script>
   <script src="./firebaseconfig.js"></script>
@@ -15,17 +16,19 @@
   <script src="./index.js" type="module"></script>
   <script src="./beaglebone.js"></script>
   <script src="../../msg/js/en.js"></script>
-  
+
 
   <style>
     body {
       background-color: #fff;
       font-family: sans-serif;
     }
+
     h1 {
       font-weight: normal;
       font-size: 140%;
     }
+
     #sorry {
       padding: 1ex;
       background-color: #f9edbe;
@@ -33,6 +36,7 @@
     }
   </style>
 </head>
+
 <body>
 
   <p>
@@ -44,7 +48,31 @@
 
   <script>
 
+    document.addEventListener("DOMContentLoaded",  () => {
+      firebase.auth().onAuthStateChanged(function (user) {
+        if(user){
+          init();
+        }else{
+          console.log("Shitttyyy")
+        }
+        
+      });
+
+    });
+
+    async function init(){
+      const workspaces = await KeyStorage.getAll();
+        workspaces.forEach(element => {
+          const workspace = document.createElement("DIV");
+          const name = document.createTextNode(element.name);
+          workspace.appendChild(name);
+          document.getElementById("workspaces").appendChild(workspace);
+        });
+    }
+
+
   </script>
 
 </body>
+
 </html>
