@@ -90,9 +90,9 @@ async function loadWorkspace() {
         const demoWorkspace = Blockly.inject('blocklyDiv', configs);
 
     } else {
-        const workspaceKey = await KeyStorage.get(workspaceName);
+        const workspaceKey = await KeyStorage.getKey(workspaceName);
         if (workspaceKey != null) {
-            const blocks = await BlocklyStorage.get(workspaceKey);
+            const blocks = await BlocklyStorage.getFromCloud(workspaceKey);
             if (blocks != null) {
                 const blocksAsDom = Blockly.Xml.textToDom(blocks);
                 const currentWorkspace = Blockly.getMainWorkspace();

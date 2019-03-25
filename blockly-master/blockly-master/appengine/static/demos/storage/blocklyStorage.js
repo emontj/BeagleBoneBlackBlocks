@@ -5,16 +5,72 @@ const KEY_DATA_TYPE_NAME = 'key';
 const XML_DATA_TYPE_NAME = 'xml';
 
 const BlocklyStorage = {
-    put : put,
-    get : get
+    putInCloud: putInCloud,
+    getFromCloud: getFromCloud
 }
+
+/**
+ * Retrieves blocks from cloud storage.
+ * @param {String} key unique id for blocks.
+ * @returns {Promise<String>} blocks as string in xml format.
+ * @throws {Error} bad http response.
+ */
+function getFromCloud(key) {
+    return sendToCloudStoarge(KEY_DATA_TYPE_NAME, key);
+}
+
+/**
+ * Stores blocks in cloud storage.
+ * @param {object} blocks blocks to be stored.
+ * @returns {Promise<String>} Unique id for blocks. Used to retrieve blocks.
+ */
+function putInCloud(blocks) {
+    const hasOneBlockStack = blocks.getTopBlocks(false).length === 1
+     && blocksAsXml.querySelector;
+
+    if (hasOneBlockStack) {
+        const block = xml.querySelector('block');
+        if (block) {
+            block.removeAttribute('x');
+            block.removeAttribute('y');
+        } 
+    }
+    const blocksAsDom = Blockly.Xml.workspaceToDom(blocks, true);
+    const blocksAsString = Blockly.Xml.domToText(blocksAsDom);
+    return sendToCloudStoarge(XML_DATA_TYPE_NAME, blocksAsString);
+};
+
+/**
+ * Sends blocks to cloud storage.
+ * @param {String} dataType type of data to be sent.
+ * @param {String} data content to be sent.
+ * @returns {Promise<String>} returns key or xml depending on the type of data
+ * @throws {Error} bad response
+ */
+async function sendToCloudStoarge(dataType, data) {
+    const requestSettings = getCloudRequestSettings(dataType, data);
+    const response = await fetch(STORAGE_URL, requestSettings);
+    if (response.ok) { return response.text(); }
+   // throw new Error(response.statusText);
+}
+
+function getCloudRequestSettings(dataType, data) {
+    const formData = new FormData();
+    formData.append(dataType, data);
+    return {
+        method: 'POST',
+        body: formData,
+        headers: new Headers({ 'Content-Type': 'application/x-www-form-urlencoded' })
+    };
+}
+
 /**
  * Backup code blocks to localStorage.
  * @param {!Blockly.WorkspaceSvg} workspace Workspace.
  * @private
  */
-function putInLocalStorage({workspaceName, workspace}) {
-    if ( localStorageIsSupported() ) {
+function putInLocalStorage(workspace) {
+    if (localStorageIsSupported()) {
         const domWorkspace = Blockly.Xml.workspaceToDom(workspace);
         const xmlWorkspace = Blockly.Xml.domToText(domWorkspace);
         localStorage.setItem(workspace, xmlWorkspace);
@@ -49,67 +105,6 @@ function getFromLocalStorage(workspaceName) {
 };
 
 /**
- * Stores workspace contents in cloud storage. Returns unique id for workspace.
- * @param {object} workspace workspace to be stored in cloud
- * @returns {String} 6 charcter string. Unique id for workspace
- */
-function put(workspace) {
-    if (workspace === undefined || workspace === null) return null;
-    const xmlWorkspace = getWorkspaceAsXml(workspace);
-    return sendToCloudStoarge(XML_DATA_TYPE_NAME, xmlWorkspace);
-};
-
-function getWorkspaceAsXml(workspace) {
-    let workspaceAsDom = Blockly.Xml.workspaceToDom(workspace, true);
-    if (hasOneBlockStack(workspace, workspaceAsDom)) {
-        removeCoordinates(workspaceAsDom);  // There's no reason to store this,
-    }                                       // removing it helps with anonymity.
-    return Blockly.Xml.domToText(workspaceAsDom);
-}
-
-function hasOneBlockStack(workspace, blocksAsXml) {
-    return workspace.getTopBlocks(false).length === 1
-        && blocksAsXml.querySelector;
-}
-
-function removeCoordinates(xml) {
-    const block = xml.querySelector('block');
-    if (block) {
-        block.removeAttribute('x');
-        block.removeAttribute('y');
-    }
-}
-
-/**
- * Sends data to storage via http request
- * @param {String} dataType type of data to be sent
- * @param {String} data content
- * @returns {Promise<String>} returns key or xml depending on the type of data
- * return null if bad response is returned.
- */
-async function sendToCloudStoarge(dataType, data) {
-    const requestSettings = getCloudRequestSettings(dataType, data);
-    const response = await fetch(STORAGE_URL, requestSettings);
-    if (response.ok) { return response.text(); }
-    console.log('Response error', response.statusText);
-    return null;
-}
-
-function getCloudRequestSettings(dataType, data) {
-    const formData = new FormData();
-    formData.append(dataType, data);
-    return {
-        method: 'POST',
-        body: formData,
-        headers: new Headers({ 'Content-Type': 'application/x-www-form-urlencoded' })
-    };
-}
-
-function get(key) {
-    return sendToCloudStoarge(KEY_DATA_TYPE_NAME, key);
-};
-
-/**
  * Start monitoring the workspace.  If a change is made that changes the XML,
  * clear the key from the URL.  Stop monitoring the workspace once such a
  * change is detected.
@@ -129,4 +124,3 @@ function monitorChanges_(workspace) {
     }
     var bindData = workspace.addChangeListener(change);
 };
-
