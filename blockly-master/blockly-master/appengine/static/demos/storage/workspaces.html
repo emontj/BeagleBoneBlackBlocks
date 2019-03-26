@@ -35,12 +35,15 @@
       border: solid 1px #f0c36d;
     }
   </style>
+
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 
 <body>
 
   <p>
-    <button id="newWorkspace">Create New Workspace</button>
+    <button type="button" class="btn btn-primary" id="newWorkspace">Create New Workspace</button>
 
   </p>
 
@@ -48,22 +51,22 @@
 
   <script>
 
-    document.addEventListener("DOMContentLoaded",  () => {
+    document.addEventListener("DOMContentLoaded", () => {
       firebase.auth().onAuthStateChanged(function (user) {
-        if(user){
+        if (user) {
           // localStorage.setItem('email',user.email);
           init();
-        }else{
+        } else {
           console.log("Shitttyyy")
         }
-        
+
       });
 
     });
 
 
 
-    async function init(){
+    async function init() {
       console.log(localStorage.getItem("workspaceName"));
 
       document.getElementById("newWorkspace").onclick = function () {
@@ -72,22 +75,82 @@
       };
 
       const workspaces = await KeyStorage.getAll();
-        workspaces.forEach(element => {
-          const workspace = document.createElement("A")
-          workspace.onclick = function() {
-            localStorage.setItem('workspaceName', element.name);
-            console.log('Opened index.html for: ' + element.name + ' workspace');
-          };
-          workspace.href = "index.html" ;
-          const name = document.createTextNode(element.name);
-          workspace.appendChild(name);
-          document.getElementById("workspaces").appendChild(workspace);
-        });
+      workspaces.forEach(element => {
+        // const workspace = document.createElement("A")
+        // workspace.onclick = function () {
+        //   localStorage.setItem('workspaceName', element.name);
+        //   console.log('Opened index.html for: ' + element.name + ' workspace');
+        // };
+        // workspace.href = "index.html";
+        // const name = document.createTextNode(element.name);
+        // workspace.appendChild(name);
+
+        const workspace = document.createElement("DIV");
+        workspace.classList.add("card");
+        workspace.style = "width: 18rem;";
+
+        const body = document.createElement("DIV");
+        body.classList.add("card-body");
+
+        const name = document.createElement("H5");
+        name.classList.add("card-title");
+        name.innerHTML = element.name;
+
+        const editBtn = document.createElement("A");
+        editBtn.classList.add("btn","btn-success");
+        editBtn.href = "index.html";
+        editBtn.innerHTML = "Edit";
+        editBtn.onclick = function () {
+          localStorage.setItem('workspaceName', element.name);
+          console.log('Opened index.html for: ' + element.name + ' workspace');
+        };
+
+        const deleteBtn = document.createElement("BUTTON");
+        deleteBtn.classList.add("btn","btn-danger");
+        deleteBtn.innerHTML = "Delete";
+        deleteBtn.onclick = function () {
+          if(window.confirm("Do you really want to delete " + element.name + "?")){
+            document.getElementById("workspaces").removeChild(workspace);
+          }
+        };
+        
+        body.appendChild(name);
+        body.appendChild(editBtn);
+        body.appendChild(deleteBtn);
+        workspace.appendChild(body);
+
+        // <div class="card" style="width: 18rem;">
+        //   <div class="card-body">
+        //     <h5 class="card-title">Card title</h5>
+        //     <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+        //     <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+        //     <a href="#" class="card-link">Card link</a>
+        //     <a href="#" class="card-link">Another link</a>
+        //   </div>
+        // </div>
+
+
+
+
+
+
+
+
+        document.getElementById("workspaces").appendChild(workspace);
+      });
     }
 
 
   </script>
-
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+    crossorigin="anonymous"></script>
 </body>
 
 </html>
