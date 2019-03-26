@@ -8,7 +8,8 @@ const KeyStorage = {
     put : put,
     getKey : getKey,
     workspaceExist : workspaceNameExist,
-    getAll : getAll
+    getAll : getAll,
+    remove : remove
 };
 
 /**
@@ -29,9 +30,20 @@ function createDocumentReference(workpsaceName) {
  */
 function createCollectionReference() {
     const userEmail = firebase.auth().currentUser.email;
-    console.log(`Current user email: ${userEmail}`);
     const keysCollectionPath = `${USER_COLLECTION}/${userEmail}/${KEY_COLLECTION}`;
     return firestore.collection(keysCollectionPath);
+}
+
+/**
+ * Remove workspace record from database.
+ * @param {String} workpsaceName name of workspace
+ * @returns {boolean} true if succeds
+ * @throws {FirebaseError} error if one occured in database.
+ */
+async function remove(workpsaceName){
+    const documentReference = createDocumentReference(workpsaceName);
+    await documentReference.delete();
+    return true;
 }
 
 /**
