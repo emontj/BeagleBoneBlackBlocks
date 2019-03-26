@@ -54,7 +54,7 @@ async function sendToCloudStoarge(dataType, data) {
     const requestSettings = getCloudRequestSettings(dataType, data);
     const response = await fetch(STORAGE_URL, requestSettings);
     if (response.ok) { return response.text(); }
-    throw new HttpResponseError(response.statusText);
+    throw new HttpResponseError(response.statusText, response.status);
 }
 
 function getCloudRequestSettings(dataType, data) {

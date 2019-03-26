@@ -19,8 +19,7 @@ const KeyStorage = {
  * that can be used to read write or listen to the location
  */
 function createDocumentReference(workpsaceName) {
-    const userEmail = null;
-
+    const userEmail =  firebase.auth().currentUser.email;;
     if (userEmail) {
         const keyPath = `${USER_COLLECTION}/${userEmail}/${KEY_COLLECTION}/${workpsaceName}`;
         return firestore.doc(keyPath);
