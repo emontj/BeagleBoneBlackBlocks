@@ -40,7 +40,7 @@
 <body>
 
   <p>
-    <button onclick="testStoreWorkspace()">Create New Workspace</button>
+    <button id="newWorkspace">Create New Workspace</button>
 
   </p>
 
@@ -64,6 +64,13 @@
 
 
     async function init(){
+      console.log(localStorage.getItem("workspaceName"));
+
+      document.getElementById("newWorkspace").onclick = function () {
+        location.href = "index.html";
+        localStorage.removeItem('workspaceName');
+      };
+
       const workspaces = await KeyStorage.getAll();
         workspaces.forEach(element => {
           const workspace = document.createElement("A")
