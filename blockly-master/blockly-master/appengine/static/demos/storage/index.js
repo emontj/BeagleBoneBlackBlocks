@@ -78,6 +78,7 @@ async function loadWorkspace() {
         const demoWorkspace = Blockly.inject('blocklyDiv', configs);
 
     } else {
+        document.getElementById("workspaceName").innerHTML = workspaceName;
         const workspaceKey = await KeyStorage.getKey(workspaceName);
         if (workspaceKey != null) {
             const blocks = await BlocklyStorage.getFromCloud(workspaceKey);
@@ -85,6 +86,7 @@ async function loadWorkspace() {
                 const blocksAsDom = Blockly.Xml.textToDom(blocks);
                 const currentWorkspace = Blockly.getMainWorkspace();
                 Blockly.Xml.domToWorkspace(currentWorkspace, blocksAsDom);
+                
             }
             else {
                 // bad tings

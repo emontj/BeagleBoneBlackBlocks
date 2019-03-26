@@ -32,16 +32,24 @@
       border: solid 1px #f0c36d;
     }
   </style>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+  integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
 </head>
 <body>
-  <h1><a href="https://developers.google.com/blockly/">Blockly</a> &gt;
-    <a href="../index.html">Demos</a> &gt; Cloud Storage</h1>
+  <h1 id="workspaceName"></h1>
 
   
   <div id="workspaces"></div>
   <p>
-    <button id='save-button'>Save Blocks</button>
-    <button id='run-button'>Run on BeagleBone</button>
+        
+    <a href="workspaces.html" style="color: Tomato;"> 
+      <i class="fas fa-arrow-circle-left fa-3x"></i> 
+    </a>
+
+    <button id='save-button' class="btn btn-primary">Save Blocks</button>
+    <button id='run-button' class="btn btn-primary">Run on BeagleBone</button>
+   
   </p>
 
   <div id="blocklyDiv" style="height: 480px; width: 600px;"></div>
@@ -97,5 +105,15 @@
   <div id="jsCodeDiv" style="height: 240px; width: 600px;"> </div>
   <div id="outputDiv" style="height: 240px; width: 600px;"> </div>
 
+
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+  integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+  crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+  integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+  crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+  integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+  crossorigin="anonymous"></script>
 </body>
 </html>
