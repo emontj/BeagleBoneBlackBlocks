@@ -13,7 +13,7 @@ const BlocklyStorage = {
  * Retrieves blocks from cloud storage.
  * @param {String} key unique id for blocks.
  * @returns {Promise<String>} blocks as string in xml format.
- * @throws {Error} bad http response.
+ * @throws {HttpResponseError} if bad http response code
  */
 function getFromCloud(key) {
     return sendToCloudStoarge(KEY_DATA_TYPE_NAME, key);
@@ -23,9 +23,11 @@ function getFromCloud(key) {
  * Stores blocks in cloud storage.
  * @param {object} blocks blocks to be stored.
  * @returns {Promise<String>} Unique id for blocks. Used to retrieve blocks.
+ * @throws {HttpResponseError} if bad http response code
  */
 function putInCloud(blocks) {
     const blocksAsDom = Blockly.Xml.workspaceToDom(blocks, true);
+    
     const hasOneBlockStack = blocks.getTopBlocks(false).length === 1
      && blocksAsDom.querySelector;
 
@@ -46,13 +48,13 @@ function putInCloud(blocks) {
  * @param {String} dataType type of data to be sent.
  * @param {String} data content to be sent.
  * @returns {Promise<String>} returns key or xml depending on the type of data
- * @throws {Error} bad response
+ * @throws {HttpResponseError} if bad http response code
  */
 async function sendToCloudStoarge(dataType, data) {
     const requestSettings = getCloudRequestSettings(dataType, data);
     const response = await fetch(STORAGE_URL, requestSettings);
     if (response.ok) { return response.text(); }
-   // throw new Error(response.statusText);
+    throw new HttpResponseError(response.statusText);
 }
 
 function getCloudRequestSettings(dataType, data) {
