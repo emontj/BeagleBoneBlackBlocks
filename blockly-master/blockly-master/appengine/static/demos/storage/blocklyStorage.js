@@ -25,17 +25,18 @@ function getFromCloud(key) {
  * @returns {Promise<String>} Unique id for blocks. Used to retrieve blocks.
  */
 function putInCloud(blocks) {
+    const blocksAsDom = Blockly.Xml.workspaceToDom(blocks, true);
     const hasOneBlockStack = blocks.getTopBlocks(false).length === 1
-     && blocksAsXml.querySelector;
+     && blocksAsDom.querySelector;
 
     if (hasOneBlockStack) {
-        const block = xml.querySelector('block');
+        const block = blocksAsDom.querySelector('block');
         if (block) {
             block.removeAttribute('x');
             block.removeAttribute('y');
         } 
     }
-    const blocksAsDom = Blockly.Xml.workspaceToDom(blocks, true);
+    
     const blocksAsString = Blockly.Xml.domToText(blocksAsDom);
     return sendToCloudStoarge(XML_DATA_TYPE_NAME, blocksAsString);
 };

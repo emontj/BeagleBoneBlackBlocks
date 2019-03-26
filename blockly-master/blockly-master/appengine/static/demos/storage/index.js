@@ -58,24 +58,10 @@ async function sendToBeagleBone() {
  */
 async function saveWorkspace() {
     const workspace = Blockly.getMainWorkspace();
-    const workspaceKey = 'testKey';
-    const workspaceName = 'testName';
+    let workspaceName = JSON.parse(localStorage.getItem('workspaceName'));
+    workspaceName = window.prompt('Name Your Workspace:', workspaceName ? workspaceName : " "); 
+    const workspaceKey = await BlocklyStorage.putInCloud(workspace);
     const keyDidSave = await KeyStorage.put(workspaceName, workspaceKey);
-
-    if (workspaceKey != null) {
-        const workspaceName = getWorkspaceName();
-
-
-        if (keyDidSave) {
-            // let user know it saved.
-        }
-        else {
-            // let user know it did not save.
-        }
-    }
-    else {
-        // let user know it did not save
-    }
 }
 
 
