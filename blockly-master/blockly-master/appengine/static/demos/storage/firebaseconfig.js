@@ -13,7 +13,7 @@ if (!firebase.apps.length) {
 }
 
 const loginUiConfig = {
-    'signInSuccessUrl': 'index.html',
+    'signInSuccessUrl': 'workspaces.html',
     'signInOptions': [
       firebase.auth.GoogleAuthProvider.PROVIDER_ID,
       firebase.auth.FacebookAuthProvider.PROVIDER_ID,
