@@ -60,8 +60,26 @@ async function saveWorkspace() {
     const workspace = Blockly.getMainWorkspace();
     let workspaceName = JSON.parse(localStorage.getItem('workspaceName'));
     workspaceName = window.prompt('Name Your Workspace:', workspaceName ? workspaceName : " "); 
-    const workspaceKey = await BlocklyStorage.putInCloud(workspace);
-    const keyDidSave = await KeyStorage.put(workspaceName, workspaceKey);
+
+    try {
+        const workspaceKey = await BlocklyStorage.putInCloud(workspace);
+        const keyDidSave = await KeyStorage.put(workspaceName, workspaceKey);
+    } catch (error) {
+    
+        if (error instanceof UserSignInError){
+            
+        }
+
+        if (error instanceof HttpResponseError) {
+
+            if (error.statusCode > 500){
+                // server error
+            }
+            else {
+                // user error
+            }
+        }
+    }
 }
 
 
