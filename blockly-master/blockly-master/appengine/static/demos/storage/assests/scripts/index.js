@@ -60,8 +60,8 @@ async function saveWorkspace() {
     const workspace = Blockly.getMainWorkspace();
     let workspaceName = JSON.parse(localStorage.getItem('workspaceName'));
     workspaceName = window.prompt('Name Your Workspace:', workspaceName ? workspaceName : " "); 
-    document.getElementById("workspaceName").innerHTML = workspaceName;
-
+    if(workspaceName.trim() != "" && workspaceName != null){
+        document.getElementById("workspaceName").innerHTML = workspaceName;
     try {
         const workspaceKey = await BlocklyStorage.putInCloud(workspace);
         const keyDidSave = await KeyStorage.put(workspaceName, workspaceKey);
@@ -81,6 +81,9 @@ async function saveWorkspace() {
             }
         }
     }
+    }
+    
+
 }
 
 
