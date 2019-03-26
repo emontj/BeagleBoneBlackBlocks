@@ -66,11 +66,9 @@ async function saveWorkspace() {
 
 
 async function loadWorkspace() {
-    const workspaceName = JSON.parse(localStorage.getItem('workspaceName'));
+    const workspaceName = localStorage.getItem('workspaceName');
 
-    console.log(workspaceName);
-
-    if (!workspaceName) {
+    if (workspaceName === "null") {
         const configs = {
             media: '../../media/',
             toolbox: document.getElementById('toolbox')

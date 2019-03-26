@@ -71,7 +71,7 @@
 
       document.getElementById("newWorkspace").onclick = function () {
         location.href = "index.html";
-        localStorage.removeItem('workspaceName');
+        localStorage.setItem('workspaceName', null);
       };
 
       const workspaces = await KeyStorage.getAll();
