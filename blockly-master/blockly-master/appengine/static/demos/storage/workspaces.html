@@ -12,7 +12,7 @@
   <script src="../../javascript_compressed.js"></script>
   <script src="../../msg/js/en.js"></script>
   <script src="./assests/scripts/firebaseconfig.js"></script>
-  <script src="./assests/scripts/keystorage.js"></script>
+  <script src="./assests/scripts/workspacestorage.js"></script>
   <script src="./assests/scripts/errors.js"></script>
 
   <style>
@@ -71,7 +71,7 @@
         localStorage.setItem('workspaceName', null);
       };
 
-      const workspaces = await KeyStorage.getAll();
+      const workspaces = await WorkspaceStorage.getAll();
       workspaces.forEach(element => {
         // const workspace = document.createElement("A")
         // workspace.onclick = function () {
@@ -105,8 +105,9 @@
         const deleteBtn = document.createElement("BUTTON");
         deleteBtn.classList.add("btn","btn-danger");
         deleteBtn.innerHTML = "Delete";
-        deleteBtn.onclick = function () {
+        deleteBtn.onclick = async function () {
           if(window.confirm("Do you really want to delete " + element.name + "?")){
+            await WorkspaceStorage.remove(element.name);
             document.getElementById("workspaces").removeChild(workspace);
           }
         };

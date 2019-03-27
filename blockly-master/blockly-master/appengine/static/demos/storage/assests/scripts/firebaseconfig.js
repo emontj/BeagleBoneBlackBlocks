@@ -24,7 +24,11 @@ const loginUiConfig = {
     ]
 };
 
+const beagleBoneConfig = {
+  serverUrl : 12345
+}
+
 const firestoreConfig = {
-  keyWorkspaceName : 'keys',
-  usersWorkspaceName : 'users'
+  usersCollection : 'users',
+  workspacesCollection : 'workspaces'
 }
