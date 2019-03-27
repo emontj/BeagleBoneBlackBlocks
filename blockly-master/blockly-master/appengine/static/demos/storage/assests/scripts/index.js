@@ -1,17 +1,17 @@
 const BEAGLE_BONE_URL = 'http://127.0.0.1:3000';
 
-document.addEventListener("DOMContentLoaded",  () => {
+document.addEventListener("DOMContentLoaded", () => {
     firebase.auth().onAuthStateChanged(function (user) {
-      if(user){
-        // localStorage.setItem('email',user.email);
-        init();
-      }else{
-        console.log("Shitttyyy")
-      }
-      
+        if (user) {
+            // localStorage.setItem('email',user.email);
+            init();
+        } else {
+            console.log("Shitttyyy")
+        }
+
     });
 
-  });
+});
 
 
 function init() {
@@ -57,65 +57,53 @@ async function sendToBeagleBone() {
  * Stores main workspace in cloud storage
  */
 async function saveWorkspace() {
-    const workspace = Blockly.getMainWorkspace();
-    let workspaceName = JSON.parse(localStorage.getItem('workspaceName'));
-    workspaceName = window.prompt('Name Your Workspace:', workspaceName ? workspaceName : " "); 
-    if(workspaceName.trim() != "" && workspaceName != null){
+    let workspaceName = localStorage.getItem('workspaceName') || "";
+    workspaceName = window.prompt('Name Your Workspace:', workspaceName);
+    workspaceName = workspaceName.trim();
+    
+    if (workspaceName != "" && workspaceName != null) {
         document.getElementById("workspaceName").innerHTML = workspaceName;
-    try {
-        const workspaceKey = await BlocklyStorage.putInCloud(workspace);
-        const keyDidSave = await KeyStorage.put(workspaceName, workspaceKey);
-    } catch (error) {
-    
-        if (error instanceof UserSignInError){
-            
-        }
 
-        if (error instanceof HttpResponseError) {
+        const workspace = Blockly.getMainWorkspace();
+        const workspaceAsDom = Blockly.Xml.workspaceToDom(workspace, true);
+        const blocks = Blockly.Xml.domToText(workspaceAsDom);
+        try {
+            const keyDidSave = await KeyStorage.put({
+                blocks: blocks,
+                name: workspaceName
+            });
+        } catch (error) {
 
-            if (error.statusCode > 500){
-                // server error
+            if (error instanceof UserSignInError) {
+
             }
-            else {
-                // user error
+
+            if (error instanceof HttpResponseError) {
+
+                if (error.statusCode > 500) {
+                    // server error
+                }
+                else {
+                    // user error
+                }
             }
         }
     }
-    }
-    
+
 
 }
 
-
 async function loadWorkspace() {
     const workspaceName = localStorage.getItem('workspaceName');
+    document.getElementById("workspaceName").innerHTML = workspaceName;
 
-    if (workspaceName === "null") {
-        const configs = {
-            media: '../../media/',
-            toolbox: document.getElementById('toolbox')
-        };
-        const demoWorkspace = Blockly.inject('blocklyDiv', configs);
+    const configs = {
+        media: '../../media/',
+        toolbox: document.getElementById('toolbox')
+    };
 
-    } else {
-        document.getElementById("workspaceName").innerHTML = workspaceName;
-        const workspaceKey = await KeyStorage.getKey(workspaceName);
-        if (workspaceKey != null) {
-            const blocks = await BlocklyStorage.getFromCloud(workspaceKey);
-            if (blocks != null) {
-                const blocksAsDom = Blockly.Xml.textToDom(blocks);
-                const currentWorkspace = Blockly.getMainWorkspace();
-                Blockly.Xml.domToWorkspace(currentWorkspace, blocksAsDom);
-                
-            }
-            else {
-                // bad tings
-            }
-        }
-        else {
-            //bad things
-        }
-    }
-
-
+    const currentWorkspace = Blockly.inject('blocklyDiv', configs);
+    const workspace = await KeyStorage.get(workspaceName);
+    const blocksAsDom = Blockly.Xml.textToDom(workspace.blocks);
+    Blockly.Xml.domToWorkspace(blocksAsDom, currentWorkspace);
 }
