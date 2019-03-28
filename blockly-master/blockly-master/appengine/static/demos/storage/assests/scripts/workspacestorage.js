@@ -58,6 +58,7 @@ function createCollectionReference() {
  * @throws {UserSignInError} if user not signed in
  */
 async function remove(workspaceName) {
+    console.log(workspaceName);
     const documentReference = createDocumentReference(workspaceName);
     await documentReference.delete();
     return true;
