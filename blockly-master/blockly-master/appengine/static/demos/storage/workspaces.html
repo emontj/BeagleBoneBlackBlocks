@@ -70,10 +70,9 @@
     document.addEventListener("DOMContentLoaded", () => {
       firebase.auth().onAuthStateChanged(function (user) {
         if (user) {
-          // localStorage.setItem('email',user.email);
           init();
         } else {
-          console.log("Shitttyyy")
+          console.log("No user logged in");
         }
 
       });
@@ -158,7 +157,7 @@
       const workspaceName = document.getElementById("bookId").value;
       WorkspaceStorage.remove(workspaceName);
       document.getElementById("workspaces").removeChild(document.getElementById(workspaceName));
-      
+      $('#exampleModalCenter').modal('hide');
     });
 
   </script>
