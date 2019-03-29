@@ -67,13 +67,9 @@
           </div>
         </nav>
 
-  <p>
-    <button type="button" class="btn btn-primary" id="newWorkspace">Create New Workspace</button>
-
-  </p>
 
   <div id="workspaces"></div>
-
+<!-- 
   <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
@@ -90,7 +86,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
 
   <script>
 
@@ -109,85 +105,11 @@
 
 
     async function init() {
-      console.log(localStorage.getItem("workspaceName"));
-
-      document.getElementById("newWorkspace").onclick = function () {
-        location.href = "index.html";
-        localStorage.setItem('workspaceName', null);
+    
       };
 
-      const workspaces = await WorkspaceStorage.getAll();
-      workspaces.forEach(element => {
-        // const workspace = document.createElement("A")
-        // workspace.onclick = function () {
-        //   localStorage.setItem('workspaceName', element.name);
-        //   console.log('Opened index.html for: ' + element.name + ' workspace');
-        // };
-        // workspace.href = "index.html";
-        // const name = document.createTextNode(element.name);
-        // workspace.appendChild(name);
-
-        const workspace = document.createElement("DIV");
-        workspace.classList.add("card");
-        workspace.style = "width: 18rem;";
-
-        const body = document.createElement("DIV");
-        body.classList.add("card-body");
-
-        const name = document.createElement("H5");
-        name.classList.add("card-title");
-        name.innerHTML = element.name;
-
-        const editBtn = document.createElement("A");
-        editBtn.classList.add("btn","btn-success");
-        editBtn.href = "index.html";
-        editBtn.innerHTML = "Edit";
-        editBtn.onclick = function () {
-          localStorage.setItem('workspaceName', element.name);
-          console.log('Opened index.html for: ' + element.name + ' workspace');
-        };
-
-        const deleteBtn = document.createElement("BUTTON");
-        deleteBtn.classList.add("btn","btn-danger");
-        deleteBtn.innerHTML = "Delete";
-        deleteBtn.id = element.name;
-        deleteBtn.setAttribute("data-toggle","modal");
-        deleteBtn.setAttribute("data-target","#exampleModalCenter");
-        
-        // deleteBtn.onclick = async function () {
-        //   if(window.confirm("Do you really want to delete " + element.name + "?")){
-        //     await WorkspaceStorage.remove(element.name);
-        //     document.getElementById("workspaces").removeChild(workspace);
-        //   }
-        // };
-        
-        body.appendChild(name);
-        body.appendChild(editBtn);
-        body.appendChild(deleteBtn);
-        workspace.id = element.name;
-        workspace.appendChild(body);
-
-        
-        document.getElementById("workspaces").appendChild(workspace);
-      });
-    }
-
-    $(document).on("click", ".btn-danger", function () {
-     var workspaceName = this.id;
-     console.log("heree",workspaceName);
-     $(".modal-footer #bookId").val( workspaceName );
-    });
-
-
-    const confirmButton = document.getElementById('deleteConfirm');
-    confirmButton.addEventListener('click', () => {
-      const workspaceName = document.getElementById("bookId").value;
-      WorkspaceStorage.remove(workspaceName);
-      document.getElementById("workspaces").removeChild(document.getElementById(workspaceName));
-      $('#exampleModalCenter').modal('hide');
-    });
-
-  </script>
+    </script>
+   
 
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
     integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
