@@ -1,7 +1,12 @@
+import {config, initializeFirebase} from "./firebaseconfig.js";
+import * as WorkspaceStorage from "./workspacestorage.js";
+import { HttpResponseError, UserSignInError } from "./errors.js";
+
 document.addEventListener("DOMContentLoaded", init);
 
 async function init() {
-  
+    initializeFirebase();
+
     const saveButton = document.getElementById('save-button');
     saveButton.addEventListener('click', saveWorkspace);
 
@@ -44,7 +49,7 @@ async function executeCodeOnBeagleBone() {
  * Stores main workspace in cloud storage
  */
 async function saveWorkspace() {
-    let workspaceName = localStorage.getItem('workspaceName') || "";
+    let workspaceName = localStorage.getItem('workspaceName');
     workspaceName = prompt('Name Your Workspace:', workspaceName).trim();
 
     if (!validWorkspaceName(workspaceName)) {
@@ -105,8 +110,8 @@ async function loadWorkspace() {
     const editingWorkspace = workspaceName != 'null';
 
     if (editingWorkspace) {
-        const workspace = await WorkspaceStorage.get(workspaceName);
-        const blocksAsDom = Blockly.Xml.textToDom(workspace.blocks);
+        const blocks = await WorkspaceStorage.getBlocks(workspaceName);
+        const blocksAsDom = Blockly.Xml.textToDom(blocks);
         Blockly.Xml.domToWorkspace(blocksAsDom, currentWorkspace);
         document.getElementById("workspaceName").innerHTML = workspaceName;
     }
