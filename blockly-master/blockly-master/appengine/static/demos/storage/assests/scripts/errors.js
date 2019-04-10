@@ -1,4 +1,4 @@
-export class HttpResponseError extends Error {
+class HttpResponseError extends Error {
     constructor(message, statusCode) {
         super();
         this.statusCode = statusCode;
@@ -7,7 +7,7 @@ export class HttpResponseError extends Error {
       }
 }
 
-export class UserSignInError extends Error {
+class UserSignInError extends Error {
     constructor(message) {
         super();
         this.message = message; 

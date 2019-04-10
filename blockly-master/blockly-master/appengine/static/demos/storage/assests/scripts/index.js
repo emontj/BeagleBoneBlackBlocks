@@ -1,11 +1,6 @@
-import {config, initializeFirebase} from "./firebaseconfig.js";
-import * as WorkspaceStorage from "./workspacestorage.js";
-import { HttpResponseError, UserSignInError } from "./errors.js";
-
 document.addEventListener("DOMContentLoaded", init);
 
 async function init() {
-    initializeFirebase();
 
     const saveButton = document.getElementById('save-button');
     saveButton.addEventListener('click', saveWorkspace);

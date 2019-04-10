@@ -1,4 +1,4 @@
-export const config = {
+const config = {
   firebase: {
     apiKey: "AIzaSyBoB4oEzfalKFJQXKrTgFmucWeZU7yXg70",
     authDomain: "iotblocks-221600.firebaseapp.com",
@@ -29,15 +29,10 @@ export const config = {
   }
 };
 
-export function initializeFirebase() {
+function initializeFirebase() {
   if (!firebase.apps.length) {
     firebase.initializeApp(config.firebase);
   }
 }
 
-export function initializeFirestore(){
-  initializeFirebase();
-  const firestore = firebase.firestore();
-  const settings = { timestampsInSnapshots: true};
-  firestore.settings(settings);
-}
+initializeFirebase();

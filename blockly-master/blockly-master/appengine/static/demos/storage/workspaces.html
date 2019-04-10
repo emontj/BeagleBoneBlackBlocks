@@ -15,29 +15,7 @@
   <script src="./assests/scripts/workspacestorage.js"></script>
   <script src="./assests/scripts/errors.js"></script>
   <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
-  <script src="https://s3.amazonaws.com/stitch-sdks/js/bundles/4.3.1/stitch.js"></script>
-  <script>
-    const client = stitch.Stitch.initializeDefaultAppClient('beagleboneblocks-trrvw');
-
-    const db = client.getServiceClient(stitch.RemoteMongoClient.factory, 'BeagleBoneBlocks').db('workspaceData');
-    
-    client.auth.loginWithCredential(new stitch.AnonymousCredential()).then(user => {
-       db.collection('workspaces').find(
-         {
-           $text:
-           {
-             $search: "brandon"
-           }
-         }
-    ).asArray().then(res => {
-         console.log(res);
-       });
-    }
-    ).catch(err => {
-      console.error(err)
-    });
-  </script>
-
+ 
   <style>
     body {
       background-color: #fff;
@@ -123,12 +101,8 @@
         } else {
           console.log("No user logged in");
         }
-
       });
-
     });
-
-
 
     async function init() {
       console.log(localStorage.getItem("workspaceName"));
@@ -138,7 +112,7 @@
         localStorage.setItem('workspaceName', null);
       };
 
-      const workspaces = await WorkspaceStorage.getAll();
+      const workspaces = await WorkspaceStorage.getAllNames();
       workspaces.forEach(element => {
         // const workspace = document.createElement("A")
         // workspace.onclick = function () {
