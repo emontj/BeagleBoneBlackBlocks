@@ -23,3 +23,26 @@ exports.storeWorkspaceInAlgo = functions
             const index = algoClient.initIndex(ALGOLIA_INDEX_NAME);
             return index.saveObject(workspaceData);
 });
+
+exports.deleteWorkspaceInAlgo = functions
+        .region('us-east1').firestore
+        .document('workspaces/{workspaceId}')
+        .onDelete((documentSnapshot, context) => {
+
+            const index = algoClient.initIndex(ALGOLIA_INDEX_NAME);
+            return index.deleteObject(documentSnapshot.id);
+});
+
+exports.updateWorkspaceInAlgo = functions
+        .region('us-east1').firestore
+        .document('workspaces/{workspaceId}')
+        .onUpdate((changeInDocument, context) => {
+
+            const workspaceData = {
+                name : changeInDocument.after.get('name'),
+                objectID : context.params.workspaceId
+            }
+
+            const index = algoClient.initIndex(ALGOLIA_INDEX_NAME);
+            return index.saveObject(workspaceData);
+});
