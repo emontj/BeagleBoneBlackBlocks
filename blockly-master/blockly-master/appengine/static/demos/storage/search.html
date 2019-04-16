@@ -7,6 +7,7 @@
   <script src="https://www.gstatic.com/firebasejs/5.5.5/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/5.5.5/firebase-firestore.js"></script>
   <script src="https://www.gstatic.com/firebasejs/5.5.7/firebase-auth.js"></script>
+  <script src="https://cdn.jsdelivr.net/algoliasearch/3/algoliasearch.min.js"></script>
   <script src="../../blockly_compressed.js"></script>
   <script src="../../blocks_compressed.js"></script>
   <script src="../../javascript_compressed.js"></script>
@@ -67,7 +68,7 @@
           </div>
         </nav>
 
-
+  <div id="searchedString"></div>
   <div id="workspaces"></div>
 <!-- 
   <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -104,9 +105,39 @@
 
 
 
-    async function init() {
-    
-      };
+     async function init() {
+        const workspaceMatches = JSON.parse(localStorage.getItem('searchResults'));
+        console.log("heeey", localStorage.getItem('searchResults'));
+        const searchedString = localStorage.getItem('searchedString');
+        document.getElementById("searchedString").innerHTML = searchedString;
+        workspaceMatches.forEach(element => {
+          const workspace = document.createElement("DIV");
+          workspace.classList.add("card");
+          workspace.style = "width: 18rem;";
+
+          const body = document.createElement("DIV");
+          body.classList.add("card-body");
+
+          const name = document.createElement("H5");
+          name.classList.add("card-title");
+          name.innerHTML = element.name;
+          
+
+          const cloneBtn = document.createElement("A");
+        cloneBtn.classList.add("btn","btn-success");
+        cloneBtn.innerHTML = "Clone to My Workspace";
+        cloneBtn.onclick = function () {
+          console.log("Hey");
+        };
+
+          
+          body.appendChild(name);
+          body.appendChild(cloneBtn);
+        workspace.id = element.name;
+        workspace.appendChild(body);
+        document.getElementById("workspaces").appendChild(workspace);
+        })
+     };
 
     </script>
    
