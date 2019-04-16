@@ -86,8 +86,6 @@ const algoObjectToWorkspace = algoObject => {
 WorkspaceStorage.remove = async workspaceName => {
     const { email } = firebase.auth().currentUser;
     const documentId = `${email}-${workspaceName}`;
-
-    await removeAlgoObjectFromIndex(documentId);
     
     const workspaceDocumentPath = `${WORKSPACES_COLLECTION_NAME}/${documentId}`;
     await firebase.firestore()
@@ -146,7 +144,7 @@ WorkspaceStorage.put = async function ({ name, blocks }) {
 };
 
 WorkspaceStorage.getCloneBlocks = async workspaceId => {
-    const documentPath = 'blocks/${workspaceId}';
+    const documentPath = `${BLOCKS_COLLECTION_NAME}/${workspaceId}`;
 
     const documentSnapshot = await firebase.firestore()
         .doc(documentPath).get();
