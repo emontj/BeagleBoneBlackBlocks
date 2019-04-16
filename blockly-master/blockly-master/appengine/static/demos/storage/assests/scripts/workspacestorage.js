@@ -17,13 +17,36 @@ const WorkspaceStorage = {}; // namespace for workspace.js
  * Returns workspace data that contains any of the keywords
  * 
  * @param {string[]} keywords - words used to search for workspaces
- * @returns {{name : string}[]} list of workspaces
+ * @returns {{name : string, id : string}[]} list of workspaces
  */
 WorkspaceStorage.find = async keywords => {
     const searchResults = keywords.map(searchWorkspaceIndex);
-    const workspaces = await Promise.all(searchResults);
-    return workspaces.flat().map(algoObjectToIndex);
+    const algoObjects = await Promise.all(searchResults);
+    const workspaces = algoObjects.flat().map(algoObjectToWorkspace);
+    const results = filterInvalidWorkspaces(workspaces);
+    return results;
 };
+
+
+function filterInvalidWorkspaces(workspaces) {
+    const {email} = firebase.auth().currentUser;
+    const otherUsersWorkspaces = workspaces.filter(workspace => {
+        return !workspace.id.includes(email);
+    });
+
+    const uniqueWorkspaces = [];
+
+    otherUsersWorkspaces.forEach(workspace => {
+        const hasSeenWorkspace = uniqueWorkspaces.find(otherWorkspace => {
+            return workspace.id === otherWorkspace.id;
+        });
+
+        if (!hasSeenWorkspace) {
+            uniqueWorkspaces.push(workspace);
+        }
+    });
+    return uniqueWorkspaces;
+}
 
 /**
  * Searches index for workspaces that use keyword
@@ -44,9 +67,14 @@ const searchWorkspaceIndex = async keyword => {
             }
         });
     });
-}
+};
 
-const algoObjectToIndex = algoObject => ( {name : algoObject.name} );
+const algoObjectToWorkspace = algoObject => {
+    return {
+        name : algoObject.name,
+        id : algoObject.objectID
+    }
+};
 
 /**
  * Remove workspace record from database.
@@ -58,8 +86,6 @@ const algoObjectToIndex = algoObject => ( {name : algoObject.name} );
 WorkspaceStorage.remove = async workspaceName => {
     const { email } = firebase.auth().currentUser;
     const documentId = `${email}-${workspaceName}`;
-
-    await removeAlgoObjectFromIndex(documentId);
     
     const workspaceDocumentPath = `${WORKSPACES_COLLECTION_NAME}/${documentId}`;
     await firebase.firestore()
@@ -117,13 +143,15 @@ WorkspaceStorage.put = async function ({ name, blocks }) {
     return true;
 };
 
-/**
- * Retrieves key from database.
- * @param {String} name - name of workspace
- * @returns {{name : string, blocks : string}} workspace.
- * @throws {FirebaseError} error if one occured in database.
- * @throws {UserSignInError} if user not signed in
- */
+WorkspaceStorage.getCloneBlocks = async workspaceId => {
+    const documentPath = `${BLOCKS_COLLECTION_NAME}/${workspaceId}`;
+
+    const documentSnapshot = await firebase.firestore()
+        .doc(documentPath).get();
+
+    return documentSnapshot.get('blocks');
+};
+
 WorkspaceStorage.getBlocks = async name => {
     const { email } = firebase.auth().currentUser;
     const documentId = `${email}-${name}`;

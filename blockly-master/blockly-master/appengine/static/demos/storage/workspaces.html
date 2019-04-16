@@ -134,7 +134,7 @@
         }
         
 
-      }
+      };
 
       document.getElementById("newWorkspace").onclick = function () {
         location.href = "index.html";
@@ -205,11 +205,34 @@
 
 
     const confirmButton = document.getElementById('deleteConfirm');
-    confirmButton.addEventListener('click', () => {
+    confirmButton.addEventListener('click', async () => {
       const workspaceName = document.getElementById("bookId").value;
-      WorkspaceStorage.remove(workspaceName);
-      document.getElementById("workspaces").removeChild(document.getElementById(workspaceName));
-      $('#exampleModalCenter').modal('hide');
+
+      try {
+
+        /**
+        * TODO: {Andriana Cole} - loading animation
+        */
+
+        await WorkspaceStorage.remove(workspaceName);
+        
+        document.getElementById("workspaces")
+        .removeChild(document.getElementById(workspaceName));
+        $('#exampleModalCenter').modal('hide');
+
+      } catch (error) {
+
+      /**
+      * TODO: {Andriana Cole} - let user know it went bad
+      */
+        console.log(error);
+      }
+
+      /**
+      * TODO: {Andriana Cole} - let user know it went well
+      */
+
+      console.log('Success');
     });
 
   </script>
