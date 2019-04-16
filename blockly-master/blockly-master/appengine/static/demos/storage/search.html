@@ -37,40 +37,42 @@
 
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+    integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
 
 </head>
 
 <body>
-      <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-          <a class="navbar-brand" href="#">BeagleBone Blocks</a>
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-        
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
-              <li class="nav-item active">
-                <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-              </li>
-              <li class="nav-item active">
-                  <a class="nav-link" href="#">About <span class="sr-only">(current)</span></a>
-              </li>
-            </ul>
-            <form class="form-inline my-2 my-lg-0">
-              <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-              <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Search</button>
-            </form>
-            
-            <span style="font-size: 3em; color: Tomato;">
-                <i class="fas fa-user-circle"></i>
-            </span>
-          </div>
-        </nav>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">BeagleBone Blocks</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" href="#">About <span class="sr-only">(current)</span></a>
+        </li>
+      </ul>
+      <form class="form-inline my-2 my-lg-0">
+        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Search</button>
+      </form>
+
+      <span style="font-size: 3em; color: Tomato;">
+        <i class="fas fa-user-circle"></i>
+      </span>
+    </div>
+  </nav>
 
   <div id="searchedString"></div>
-  <div id="workspaces"></div>
-<!-- 
+  <div id="workspaces" class="row justify-content-center"></div>
+  <!-- 
   <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
@@ -105,55 +107,74 @@
 
 
 
-     async function init() {
-        const workspaceMatches = JSON.parse(localStorage.getItem('searchResults'));
-        console.log("heeey", localStorage.getItem('searchResults'));
-        const searchedString = localStorage.getItem('searchedString');
-        document.getElementById("searchedString").innerHTML = searchedString;
-        workspaceMatches.forEach(element => {
-          const workspace = document.createElement("DIV");
-          workspace.classList.add("card");
-          workspace.style = "width: 18rem;";
+    async function init() {
+      const workspaceMatches = JSON.parse(localStorage.getItem('searchResults'));
+      console.log("heeey", localStorage.getItem('searchResults'));
+      const searchedString = localStorage.getItem('searchedString');
+      document.getElementById("searchedString").innerHTML = `Search Results for "${searchedString}"` ;
+      workspaceMatches.forEach(element => {
+        const workspace = document.createElement("DIV");
+        workspace.classList.add("card");
+        workspace.style = "width: 18rem;";
 
-          const body = document.createElement("DIV");
-          body.classList.add("card-body");
+        const body = document.createElement("DIV");
+        body.classList.add("card-body");
 
-          const name = document.createElement("H5");
-          name.classList.add("card-title");
-          name.innerHTML = element.name;
-          
+        const name = document.createElement("H5");
+        name.classList.add("card-title");
+        name.innerHTML = element.name;
 
-          const cloneBtn = document.createElement("A");
-        cloneBtn.classList.add("btn","btn-success");
-        cloneBtn.innerHTML = "Clone to My Workspace";
 
-        cloneBtn.onclick = async () => {
 
-            try {
 
-                const blocks = await WorkspaceStorage.getCloneBlocks(element.id);
+        //<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
 
-                await WorkspaceStorage.put({
-                    name : element.name,
-                    blocks : blocks
-                });
+        const loading = document.createElement("SPAN");
+        loading.classList.add("spinner-border", "spinner-border-sm");
+        loading.role = "status";
+        loading.style.visibility = "hidden";
+        loading.id = "spinner";
 
-            } catch (error) {
-                console.log(error);
-            }
+        const cloneBtn = document.createElement("A");
+        cloneBtn.classList.add("btn", "btn-success");
+        
 
-        };
+        const text = document.createTextNode("Clone to My Acccount");
 
-          body.appendChild(name);
-          body.appendChild(cloneBtn);
+        cloneBtn.appendChild(loading);
+        cloneBtn.appendChild(text);
+        body.appendChild(name);
+        body.appendChild(cloneBtn);
         workspace.id = element.name;
         workspace.appendChild(body);
         document.getElementById("workspaces").appendChild(workspace);
-        })
-     };
 
-    </script>
-   
+        cloneBtn.onclick = async () => {
+
+          try {
+
+            cloneBtn.childNodes[1].nodeValue = "Loading...";
+            const spinner = cloneBtn.children[0];
+            spinner.style.visibility = "visible";
+            const blocks = await WorkspaceStorage.getCloneBlocks(element.id);
+
+            await WorkspaceStorage.put({
+              name: element.name,
+              blocks: blocks
+            });
+
+          } catch (error) {
+            console.log(error);
+          }
+          const spinner = cloneBtn.children[0];
+          spinner.style.visibility = "hidden";
+          cloneBtn.childNodes[1].nodeValue = "Clone to My Workspace";
+        };
+      })
+    };
+
+  </script>
+
 
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
     integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
