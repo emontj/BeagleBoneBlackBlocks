@@ -1,0 +1,76 @@
+body {
+   
+	background-color: #ff4c98; 
+	background-image: url(computer-icon6.png),url(computer-keyboard2.jpg), url(color1.png);
+	background-size: 240px, 150px, 3000px;
+	background-position: 1140px 150px, 1185px 375px, 0.5px 500px;
+	background-repeat: no-repeat;
+
+}		
+
+
+button2 { 
+	background-color: white;
+	color: #FF006D; 
+	padding: 15px 10px; 
+	margin-top: 10px; 
+	margin-left: 80px;
+	width: 100px;
+	height: 50px;
+	font-family: Arial;
+	font-weight: bold;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+}
+
+
+button3 { 
+	background-color: white;
+	color: #FF006D; 
+	padding: 15px 10px; 
+	margin: 10px; 
+	width: 100px;
+	height: 50px;
+	font-family: Arial;
+	font-weight: bold;
+	text-align: center;
+	background-image: url(hammer-icon.png);
+}
+
+
+p { 	color: white;
+	font-family: Arial;
+	font-weight: bold;
+	padding: 5px 10px;
+	font-size: 30px;
+	margin-top: -80px;
+	margin-left: 70px;
+	
+
+}
+
+
+h2 { color: white
+}
+
+.navbar-nav {
+   margin: auto; 
+}
+
+input[type=text] {
+            width: 350px;
+            box-sizing: border-box;
+            border: 2px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+            background-color: #FF006D;
+            background-image: url(Search-icon.png);
+	    background-size: 15px 15px;
+            background-position: 10px 10px;
+            color: white;
+	    border-color: #FF006D;
+            background-repeat: no-repeat;
+            padding: 5px 20px 5px 40px;
+           
+        }

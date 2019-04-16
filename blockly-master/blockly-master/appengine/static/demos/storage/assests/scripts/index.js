@@ -2,6 +2,27 @@ document.addEventListener("DOMContentLoaded", init);
 
 async function init() {
 
+    document.getElementById('search-button').onclick = async event => {
+        event.preventDefault();
+        console.log("byeee");
+        const keywords = document.getElementById('search-input').value;
+        const keywordsAsArray = keywords.split(' ');
+        
+        try {
+          const workspaces = await WorkspaceStorage.find(keywordsAsArray);
+          console.log("beboop", workspaces);
+          const workspacesAsJsonString  = JSON.stringify(workspaces);
+          localStorage.setItem('searchResults',workspacesAsJsonString);
+          localStorage.setItem('searchedString', keywords);
+          console.log(workspaces);
+          location.href = 'search.html';
+        } catch(error) {
+          console.log(error);
+        }
+        
+
+      };
+
     const saveButton = document.getElementById('save-button');
     saveButton.addEventListener('click', saveWorkspace);
 

@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Blockly Demo: Cloud Storage</title>
+  <title>BeagleBone Blocks</title>
 
   <script src="https://www.gstatic.com/firebasejs/5.5.5/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/5.5.5/firebase-firestore.js"></script>
@@ -18,60 +18,58 @@
   <script src="./assests/scripts/index.js"></script>
   <script src="./assests/scripts/beaglebone.js"></script>
 
-  <style>
-    body {
-      background-color: #fff;
-      font-family: sans-serif;
-    }
-    h1 {
-      font-weight: normal;
-      font-size: 140%;
-    }
-    #sorry {
-      padding: 1ex;
-      background-color: #f9edbe;
-      border: solid 1px #f0c36d;
-    }
-    
-  </style>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
   integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+  <link rel="stylesheet" href="index.css">
 </head>
 <body>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-                <a class="navbar-brand" href="#">BeagleBone Blocks</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                  <span class="navbar-toggler-icon"></span>
-                </button>
-              
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                  <ul class="navbar-nav mr-auto">
-                    <li class="nav-item active">
-                      <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link" href="#">Link</a>
-                    </li>
-                    
-                    <li class="nav-item">
-                      <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-                    </li>
-                  </ul>
-                  <form class="form-inline my-2 my-lg-0">
-                    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-                  </form>
-                </div>
-              </nav>
-  <h1 id="workspaceName"></h1>
+    <nav class="navbar navbar-expand-lg navbar-light " style="background-color: #ff4c98; border-bottom: 2px solid #FF006D";>
+        <a class="navbar-brand" style="text-shadow: 2px 1px 0 #000,-1px 1px 0 #367AE9, 1px -1px 0 #367AE9, -1px -1px 0 #367AE9, 0px 1px 0 #367AE9, 0px -1px 0 #367AE9, -1px 0px 0 #367AE9, 1px 0px 0 #367AE9, 2px 2px 0 #367AE9,
+    -2px 2px 0 #367AE9, 2px -2px 0 #367AE9, -2px -2px 0 #367AE9, 0px 2px 0 #367AE9, 0px -2px 0 #367AE9,-2px 0px 0 #367AE9, 2px 0px 0 #367AE9, 1px 2px 0 #367AE9, -1px 2px 0 #367AE9, 1px -2px 0 #367AE9, -1px -2px 0 #367AE9, 2px 1px 0 #367AE9,
+    -2px 1px 0 #367AE9, 2px -1px 0 #367AE9,-2px -1px 0 #367AE9; color:white; font-family:Arial; font-weight: bold; font-size: 30px; text-align:center;" href="homepage.html">Beaglebone Blocks</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+              <a class="nav-link" style="color: white; font-family: Arial; font-weight: bold;" href="#">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" style="color: white; font-family: Arial; font-weight: bold;" href="workspaces.html">My Workspaces</a>
+            </li>
+            
+            <li class="nav-item">
+              <a class="nav-link" style="color: white; font-family: Arial; font-weight: bold;" href="index.html" >Create</a>
+            </li>
+          </ul>
+          <form class="form-inline my-2 my-lg-0">
+            <input name="search" id = "search-input"  type="text" placeholder="Search" >
+            <button id="search-button" class="btn btn-outline-success my-2 my-sm-0" style="color:blue; border-color: blue;"type="submit">Search</button>
+          </form>
+          <ul class="navbar-nav">
+      
+              <li class="nav-item dropdown">
+                      <a style="color:blue;" class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          <i class="fas fa-user-circle fa-3x"></i>
+                        </a>
+                  <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="#">Sign Out</a>
+                  </div>
+              </li>
+              </ul>
+        </div>
+      </nav>
+  <h1 id="workspaceName" style="text-align:center; font-family:Arial; font-size:30px; padding:20px; color:blue"></h1>
 
   
   <div id="workspaces"></div>
   <p>
         
     <a href="workspaces.html" style="color: Tomato;"> 
-      <i class="fas fa-arrow-circle-left fa-3x"></i> 
+      <i class="fas fa-arrow-circle-left fa-3x" style="color: blue;"></i>  
     </a>
 
     <button id='save-button' class="btn btn-primary">Save Blocks</button>
@@ -79,8 +77,8 @@
    
   </p>
 
-  <div id="blocklyDiv" style="height: 480px; width: 600px;"></div>
-  <xml id="toolbox" style="display: none">
+  <div id="blocklyDiv" style="height: 650px; width: 600px; color: blue"></div>
+  <xml id="toolbox" style="display: none; border-color: blue">
     <category name="Logic" colour="%{BKY_LOGIC_HUE}">
       <block type="controls_if"></block>
       <block type="logic_compare"></block>
@@ -128,8 +126,22 @@
 
   </xml>
  
-  <div id="jsCodeDiv" style="height: 240px; width: 600px;"> </div>
-  <div id="outputDiv" style="height: 240px; width: 600px;"> </div>
+
+  <div id="card1" class="card border-primary mb-3" style="max-width: 40rem;">
+    <div class="card-header bg-transparent border-primary" style="text-align: center">JavaScript Code</div>
+    <div class="card-body text-success">
+        <h5 class="card-title" >Success card title</h5>
+        <p id="jsCodeDiv" class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+    </div>
+</div>
+
+<div id="card2" class="card border-primary mb-3" style="max-width: 40rem;">
+    <div class="card-header bg-transparent border-primary" style="text-align: center">Output Code</div>
+    <div class="card-body text-success">
+        <h5 class="card-title" >Success card title</h5>
+        <p id="outputDiv" class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+    </div>
+</div>
 
 
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"

@@ -17,71 +17,63 @@
   <script src="./assests/scripts/errors.js"></script>
   <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
  
-  <style>
-    body {
-      background-color: #fff;
-      font-family: sans-serif;
-    }
 
-    h1 {
-      font-weight: normal;
-      font-size: 140%;
-    }
-
-    #sorry {
-      padding: 1ex;
-      background-color: #f9edbe;
-      border: solid 1px #f0c36d;
-    }
-  </style>
 
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
-
+    <link rel="stylesheet" href="workspace.css">
 </head>
 
 <body>
-      <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-          <a class="navbar-brand" href="#">BeagleBone Blocks</a>
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-        
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
-              <li class="nav-item active">
-                <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-              </li>
-              <li class="nav-item active">
-                  <a class="nav-link" href="#">About <span class="sr-only">(current)</span></a>
-              </li>
-            </ul>
-            <form class="form-inline my-2 my-lg-0">
-              <input id="search-input" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-              <button id="search-button" class="btn btn-outline-primary my-2 my-sm-0" type="submit">Search</button>
-            </form>
-            <ul class="navbar-nav">
-            <li class="nav-item dropdown">
-                    <a style="color: Tomato;" class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fas fa-user-circle fa-3x"></i>
-                      </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <a class="dropdown-item" href="#">Sign Out</a>
-                  <div class="dropdown-divider"></div>
-                  <a class="dropdown-item" href="#">Sign Out </a>
-                </div>
+    <nav class="navbar navbar-expand-lg navbar-light " style="background-color: #ff4c98; border-bottom: 2px solid #FF006D";>
+        <a class="navbar-brand" style="text-shadow: 2px 1px 0 #000,-1px 1px 0 #367AE9, 1px -1px 0 #367AE9, -1px -1px 0 #367AE9, 0px 1px 0 #367AE9, 0px -1px 0 #367AE9, -1px 0px 0 #367AE9, 1px 0px 0 #367AE9, 2px 2px 0 #367AE9,
+    -2px 2px 0 #367AE9, 2px -2px 0 #367AE9, -2px -2px 0 #367AE9, 0px 2px 0 #367AE9, 0px -2px 0 #367AE9,-2px 0px 0 #367AE9, 2px 0px 0 #367AE9, 1px 2px 0 #367AE9, -1px 2px 0 #367AE9, 1px -2px 0 #367AE9, -1px -2px 0 #367AE9, 2px 1px 0 #367AE9,
+    -2px 1px 0 #367AE9, 2px -1px 0 #367AE9,-2px -1px 0 #367AE9; color:white; font-family:Arial; font-weight: bold; font-size: 30px; text-align:center;" href="homepage.html">Beaglebone Blocks</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+              <a class="nav-link" style="color: white; font-family: Arial; font-weight: bold;" href="#">Home <span class="sr-only">(current)</span></a>
             </li>
-            </ul>
-          </div>
-        </nav>
+            <li class="nav-item">
+              <a class="nav-link" style="color: white; font-family: Arial; font-weight: bold;" href="workspaces.html">My Workspaces</a>
+            </li>
+            
+            <li class="nav-item">
+              <a class="nav-link" style="color: white; font-family: Arial; font-weight: bold;" href="index.html" >Create</a>
+            </li>
+          </ul>
+          <form class="form-inline my-2 my-lg-0">
+            <input name="search" id = "search-input"  type="text" placeholder="Search" >
+            <button id="search-button" class="btn btn-outline-success my-2 my-sm-0" style="color:blue; border-color: blue;"type="submit">Search</button>
+          </form>
+          <ul class="navbar-nav">
+      
+              <li class="nav-item dropdown">
+                      <a style="color:blue;" class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          <i class="fas fa-user-circle fa-3x"></i>
+                        </a>
+                  <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="#">Sign Out</a>
+                  </div>
+              </li>
+              </ul>
+        </div>
+      </nav>
+      
+          
+ 
 
   <p>
     <button type="button" class="btn btn-primary" id="newWorkspace">Create New Workspace</button>
 
   </p>
 
-  <div id="workspaces"></div>
+  <div id="workspaces" class="row justify-content-center"></div>
 
   <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -114,7 +106,8 @@
     });
 
     async function init() {
-
+      //Needed to clear storage 
+      localStorage.removeItem("workspaceName");
       document.getElementById('search-button').onclick = async event => {
         event.preventDefault();
         console.log("byeee");
@@ -136,6 +129,8 @@
 
       };
 
+      
+
       document.getElementById("newWorkspace").onclick = function () {
         location.href = "index.html";
         localStorage.setItem('workspaceName', null);
@@ -143,14 +138,6 @@
 
       const workspaces = await WorkspaceStorage.getAllNames();
       workspaces.forEach(element => {
-        // const workspace = document.createElement("A")
-        // workspace.onclick = function () {
-        //   localStorage.setItem('workspaceName', element.name);
-        //   console.log('Opened index.html for: ' + element.name + ' workspace');
-        // };
-        // workspace.href = "index.html";
-        // const name = document.createTextNode(element.name);
-        // workspace.appendChild(name);
 
         const workspace = document.createElement("DIV");
         workspace.classList.add("card");
@@ -162,11 +149,15 @@
         const name = document.createElement("H5");
         name.classList.add("card-title");
         name.innerHTML = element.name;
+        name.style.textAlign = "center";
+        name.style.marginBottom = "30px";
 
         const editBtn = document.createElement("A");
         editBtn.classList.add("btn","btn-success");
         editBtn.href = "index.html";
         editBtn.innerHTML = "Edit";
+        editBtn.style.marginLeft="30px";
+        editBtn.style.backgroundColor = "blue";
         editBtn.onclick = function () {
           localStorage.setItem('workspaceName', element.name);
           console.log('Opened index.html for: ' + element.name + ' workspace');
@@ -178,18 +169,15 @@
         deleteBtn.id = element.name;
         deleteBtn.setAttribute("data-toggle","modal");
         deleteBtn.setAttribute("data-target","#exampleModalCenter");
-        
-        // deleteBtn.onclick = async function () {
-        //   if(window.confirm("Do you really want to delete " + element.name + "?")){
-        //     await WorkspaceStorage.remove(element.name);
-        //     document.getElementById("workspaces").removeChild(workspace);
-        //   }
-        // };
+        deleteBtn.style.backgroundColor = "#FF006D";
+        deleteBtn.style.marginLeft="40px";
         
         body.appendChild(name);
         body.appendChild(editBtn);
         body.appendChild(deleteBtn);
         workspace.id = element.name;
+        workspace.style.margin="15px";
+        workspace.style.borderColor ="blue";
         workspace.appendChild(body);
 
         

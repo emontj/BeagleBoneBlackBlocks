@@ -1,0 +1,27 @@
+#newWorkspace{
+	background-color: white;
+	color: #FF006D; 
+	font-family: Arial;
+	margin-top:10px;
+	
+	
+}
+
+input[type=text] {
+            width: 350px;
+            box-sizing: border-box;
+            border: 2px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+            background-color: #FF006D;
+            background-image: url(Search-icon.png);
+	    background-size: 15px 15px;
+            background-position: 10px 10px;
+            color: white;
+	    border-color: #FF006D;
+            background-repeat: no-repeat;
+            padding: 5px 20px 5px 40px;
+            
+        }
+
+

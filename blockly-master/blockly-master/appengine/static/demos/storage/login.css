@@ -1,0 +1,43 @@
+body {
+	
+	background-repeat:  no-repeat;
+ 
+	background-position: 80% 80%;
+	background-color: #FF4C98;
+}
+
+#firebaseui-auth-container { 
+	background-color: #FF006D;
+	border: solid; 
+	border-color: white; 
+	border-style: outset;
+	padding: 10px;
+	font-size: 30px;
+	width: 20%;
+	margin-top: 100px;
+    	margin-bottom: 100px;
+    	margin-right: 500px;
+    	margin-left: 550px;
+}
+
+.navbar-nav {
+   margin: auto; 
+}
+
+input[type=text] {
+            width: 350px;
+            box-sizing: border-box;
+            border: 2px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+            background-color: #FF006D;
+            background-image: url(Search-icon.png);
+	    background-size: 15px 15px;
+            background-position: 10px 10px;
+            color: white;
+	    border-color: #FF006D;
+            background-repeat: no-repeat;
+            padding: 5px 20px 5px 40px;
+            -webkit-transition: width 0.4s ease-in-out;
+            transition: width 0.4s ease-in-out;
+        }
