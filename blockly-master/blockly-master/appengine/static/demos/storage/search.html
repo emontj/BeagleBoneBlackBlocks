@@ -126,11 +126,24 @@
           const cloneBtn = document.createElement("A");
         cloneBtn.classList.add("btn","btn-success");
         cloneBtn.innerHTML = "Clone to My Workspace";
-        cloneBtn.onclick = function () {
-          console.log("Hey");
+
+        cloneBtn.onclick = async () => {
+
+            try {
+
+                const blocks = await WorkspaceStorage.getCloneBlocks(element.id);
+
+                await WorkspaceStorage.put({
+                    name : element.name,
+                    blocks : blocks
+                });
+
+            } catch (error) {
+                console.log(error);
+            }
+
         };
 
-          
           body.appendChild(name);
           body.appendChild(cloneBtn);
         workspace.id = element.name;
