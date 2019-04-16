@@ -1,4 +1,9 @@
 const config = {
+   algo: {
+     appId: "A0CZO7F0WN",
+     apiKey: "cc4a55bb4e5c9100112436b0a181d8a0",
+     indexName: "workspaces"
+   },
   firebase: {
     apiKey: "AIzaSyBoB4oEzfalKFJQXKrTgFmucWeZU7yXg70",
     authDomain: "iotblocks-221600.firebaseapp.com",
