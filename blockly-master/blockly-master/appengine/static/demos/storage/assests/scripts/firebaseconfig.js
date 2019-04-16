@@ -1,18 +1,13 @@
-const firebaseConfig = {
+const config = {
+  firebase: {
     apiKey: "AIzaSyBoB4oEzfalKFJQXKrTgFmucWeZU7yXg70",
     authDomain: "iotblocks-221600.firebaseapp.com",
     databaseURL: "https://iotblocks-221600.firebaseio.com",
     projectId: "iotblocks-221600",
     storageBucket: "iotblocks-221600.appspot.com",
     messagingSenderId: "354851545946"
-  };
-
-
-if (!firebase.apps.length) {
-  firebase.initializeApp(firebaseConfig);
-}
-
-const loginUiConfig = {
+  },
+  loginUi: {
     'signInSuccessUrl': 'workspaces.html',
     'signInOptions': [
       firebase.auth.GoogleAuthProvider.PROVIDER_ID,
@@ -22,13 +17,22 @@ const loginUiConfig = {
       firebase.auth.EmailAuthProvider.PROVIDER_ID,
       firebase.auth.PhoneAuthProvider.PROVIDER_ID
     ]
+  },
+  beagleBone: {
+    serverUrl: 1234
+  },
+  firestore: {
+    collectionNames: {
+      blocks: "blocks",
+      workspaces: "workspaces"
+    }
+  }
 };
 
-const beagleBoneConfig = {
-  serverUrl : 12345
+function initializeFirebase() {
+  if (!firebase.apps.length) {
+    firebase.initializeApp(config.firebase);
+  }
 }
 
-const firestoreConfig = {
-  usersCollection : 'users',
-  workspacesCollection : 'workspaces'
-}
+initializeFirebase();

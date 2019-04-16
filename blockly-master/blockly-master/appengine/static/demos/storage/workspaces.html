@@ -7,6 +7,7 @@
   <script src="https://www.gstatic.com/firebasejs/5.5.5/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/5.5.5/firebase-firestore.js"></script>
   <script src="https://www.gstatic.com/firebasejs/5.5.7/firebase-auth.js"></script>
+  <script src="https://cdn.jsdelivr.net/algoliasearch/3/algoliasearch.min.js"></script>
   <script src="../../blockly_compressed.js"></script>
   <script src="../../blocks_compressed.js"></script>
   <script src="../../javascript_compressed.js"></script>
@@ -15,7 +16,7 @@
   <script src="./assests/scripts/workspacestorage.js"></script>
   <script src="./assests/scripts/errors.js"></script>
   <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
-
+ 
   <style>
     body {
       background-color: #fff;
@@ -57,8 +58,8 @@
               </li>
             </ul>
             <form class="form-inline my-2 my-lg-0">
-              <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-              <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Search</button>
+              <input id="search-input" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+              <button id="search-button" class="btn btn-outline-primary my-2 my-sm-0" type="submit">Search</button>
             </form>
             <ul class="navbar-nav">
             <li class="nav-item dropdown">
@@ -109,22 +110,31 @@
         } else {
           console.log("No user logged in");
         }
-
       });
-
     });
 
-
-
     async function init() {
-      console.log(localStorage.getItem("workspaceName"));
+
+      document.getElementById('search-button').onclick = async event => {
+        event.preventDefault();
+        const keywords = document.getElementById('search-input').value;
+        const keywordsAsArray = keywords.split(',');
+
+        try {
+          const workspaces = await WorkspaceStorage.find(keywordsAsArray);
+          console.log(workspaces);
+        } catch(error) {
+          console.log(error);
+        }
+
+      }
 
       document.getElementById("newWorkspace").onclick = function () {
         location.href = "index.html";
         localStorage.setItem('workspaceName', null);
       };
 
-      const workspaces = await WorkspaceStorage.getAll();
+      const workspaces = await WorkspaceStorage.getAllNames();
       workspaces.forEach(element => {
         // const workspace = document.createElement("A")
         // workspace.onclick = function () {

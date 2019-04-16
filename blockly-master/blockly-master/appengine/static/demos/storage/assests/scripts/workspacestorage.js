@@ -1,54 +1,52 @@
+const WORKSPACES_COLLECTION_NAME = config.firestore.collectionNames.workspaces;
+const BLOCKS_COLLECTION_NAME = config.firestore.collectionNames.blocks;
+const ALGO_API_KEY = config.algo.apiKey;
+const ALGO_APP_ID = config.algo.appId;
+const ALGO_INDEX_NAME = config.algo.indexName;
+
 const firestore = firebase.firestore();
+const settings = { timestampsInSnapshots: true };
+firestore.settings(settings);
 
- /** @constant {string} name of collection where user data is stored */
-const USERS_COLLECTION = firestoreConfig.usersCollection;
+const algoClient = algoliasearch(ALGO_APP_ID, ALGO_API_KEY); // initialize client 
+const algoWorkspacesIndex = algoClient.initIndex(ALGO_INDEX_NAME);
 
-console.log(`USER_COLLECTION: ${USERS_COLLECTION}`);
-/** @constant {string} name of collection that stores workspaces*/
-const WORKSPACES_COLLECTIONS = firestoreConfig.workspacesCollection;
-
-firestore.settings({ timestampsInSnapshots: true });
+const WorkspaceStorage = {}; // namespace for workspace.js
 
 /**
- * Contains functions for manipulating storage
- * @type {Object}
- * @property {function}
+ * Returns workspace data that contains any of the keywords
+ * 
+ * @param {string[]} keywords - words used to search for workspaces
+ * @returns {{name : string}[]} list of workspaces
  */
-const WorkspaceStorage = {
-    put: put,
-    get: get,
-    exist: exists,
-    getAll: getAll,
-    remove: remove
+WorkspaceStorage.find = async keywords => {
+    const searchResults = keywords.map(searchWorkspaceIndex);
+    const workspaces = await Promise.all(searchResults);
+    return workspaces.flat().map(algoObjectToIndex);
 };
 
 /**
- * creates a DocumentReference to a document
- * @param {String} workpsaceName name of workspace
- * @returns {firebase.firestore.DocumentReference} reference to a document
- * that can be used to read write or listen to the location
+ * Searches index for workspaces that use keyword
+ * @param {string} keyword - word used to scan for workspaces
+ * @returns {Promise<{name : string}[]>} workspaces  
  */
-function createDocumentReference(workpsaceName) {
-    const userEmail =  firebase.auth().currentUser.email;;
-    if (userEmail) {
-        const documentPath = `${USERS_COLLECTION}/${userEmail}/${WORKSPACES_COLLECTIONS}/${workpsaceName}`;
-        return firestore.doc(documentPath);
-    }
-    throw new UserSignInError('user is not signed in');
+const searchWorkspaceIndex = async keyword => {
+
+    return new Promise( (resolve, reject) => {
+
+        algoWorkspacesIndex.search(keyword, (error, results) => {
+
+            if (error) {
+                reject(error);
+            }
+            else {
+                resolve(results.hits);
+            }
+        });
+    });
 }
 
-/**
- * creates a reference to a collection
- * @returns {firebase.firestore.CollectionReference}
- */
-function createCollectionReference() {
-    const userEmail = firebase.auth().currentUser.email;
-    if (userEmail) {
-        const collectionPath = `${USERS_COLLECTION}/${userEmail}/${WORKSPACES_COLLECTIONS}`;
-        return firestore.collection(collectionPath);
-    }
-    throw new UserSignInError('user is not signed in');
-}
+const algoObjectToIndex = algoObject => ( {name : algoObject.name} );
 
 /**
  * Remove workspace record from database.
@@ -57,11 +55,37 @@ function createCollectionReference() {
  * @throws {FirebaseError} error if one occured in database.
  * @throws {UserSignInError} if user not signed in
  */
-async function remove(workspaceName) {
-    console.log(workspaceName);
-    const documentReference = createDocumentReference(workspaceName);
-    await documentReference.delete();
+WorkspaceStorage.remove = async workspaceName => {
+    const { email } = firebase.auth().currentUser;
+    const documentId = `${email}-${workspaceName}`;
+
+    await removeAlgoObjectFromIndex(documentId);
+    
+    const workspaceDocumentPath = `${WORKSPACES_COLLECTION_NAME}/${documentId}`;
+    await firebase.firestore()
+        .doc(workspaceDocumentPath)
+        .delete();
+
+    const blocksDocumentPath = `${BLOCKS_COLLECTION_NAME}/${documentId}`;
+    await firebase.firestore()
+        .doc(blocksDocumentPath)
+        .delete();
+
     return true;
+};
+
+const removeAlgoObjectFromIndex = objectId => {
+    return new Promise( (resolve, reject) => {
+        algoClient.deleteObject(objectId, (error, content) => {
+
+            if (error){
+                reject(error);
+            }
+            else {
+                resolve(content);
+            }
+        })
+    });
 }
 
 /**
@@ -74,9 +98,22 @@ async function remove(workspaceName) {
  * @throws {FirebaseError} error if one occured in database.
  * @throws {UserSignInError} if user not signed in
  */
-async function put({name, blocks}) {
-    const documentReference = createDocumentReference(name);
-    await documentReference.set({blocks : blocks});
+WorkspaceStorage.put = async function ({ name, blocks }) {
+    const { email } = firebase.auth().currentUser;
+    const documentId = `${email}-${name}`;
+
+    const workspaceDocumentpath = firebase.firestore()
+        .collection(WORKSPACES_COLLECTION_NAME)
+        .doc(documentId);
+
+    await workspaceDocumentpath.set({ name, email });
+
+    const blocksDocumentPath = firebase.firestore()
+        .collection(BLOCKS_COLLECTION_NAME)
+        .doc(documentId);
+
+    await blocksDocumentPath.set({ blocks });
+
     return true;
 };
 
@@ -87,11 +124,15 @@ async function put({name, blocks}) {
  * @throws {FirebaseError} error if one occured in database.
  * @throws {UserSignInError} if user not signed in
  */
-async function get(name) {
-    const documentReference = createDocumentReference(name);
-    const documentSnapshot = await documentReference.get();
-    const workspace = documentSnapshot.data();
-    return workspace;
+WorkspaceStorage.getBlocks = async name => {
+    const { email } = firebase.auth().currentUser;
+    const documentId = `${email}-${name}`;
+    const documentPath = `${BLOCKS_COLLECTION_NAME}/${documentId}`;
+
+    const documentSnapshot = await firebase.firestore()
+        .doc(documentPath).get();
+
+    return documentSnapshot.get('blocks');
 };
 
 /**
@@ -101,7 +142,7 @@ async function get(name) {
  * @throws {FirebaseError} error if one occured in database.
  * @throws {UserSignInError} if user not signed in
  */
-async function exists(name) {
+WorkspaceStorage.exists = async function (name) {
     const documentReference = createDocumentReference(name);
     const { exists } = await documentReference.get();
     return exists;
@@ -109,17 +150,28 @@ async function exists(name) {
 
 /**
  * Returns all keys and names of the users workspaces.
- * @returns {Promise<{name : string, blocks : string}[]>} all workspace names
+ * @returns {Promise<string[]>} all workspace names
  * objects that contain all of users workspaces data
  * @throws {FirebaseError} error if one occured in database.
  * @throws {UserSignInError} if user not signed in
  */
-async function getAll() {
-    const collectionReference = createCollectionReference();
-    const { docs } = await collectionReference.get();
-    const workspaces = docs.map(toWorkspace);
-    return workspaces;
+WorkspaceStorage.getAllNames = async function () {
+    const { email } = firebase.auth().currentUser;
+
+    const collectionReference = firebase.firestore()
+        .collection(WORKSPACES_COLLECTION_NAME);
+
+    const { docs } = await collectionReference
+        .where('email', '==', email)
+        .get();
+
+    return docs.map(doc => ({ name: doc.get('name') }));
 };
+
+function parseName(documentId) {
+    const parts = documentId.split('-');
+    return parts[0];
+}
 
 /**
  * converts firestore document to workspace object.
