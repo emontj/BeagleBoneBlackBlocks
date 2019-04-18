@@ -1,3 +1,5 @@
+const SERVER_URL = config.beagleBone.serverUrl;
+const localHost = 'http://127.0.0.1:5050';
 document.addEventListener("DOMContentLoaded", init);
 
 async function init() {
@@ -7,21 +9,21 @@ async function init() {
         console.log("byeee");
         const keywords = document.getElementById('search-input').value;
         const keywordsAsArray = keywords.split(' ');
-        
-        try {
-          const workspaces = await WorkspaceStorage.find(keywordsAsArray);
-          console.log("beboop", workspaces);
-          const workspacesAsJsonString  = JSON.stringify(workspaces);
-          localStorage.setItem('searchResults',workspacesAsJsonString);
-          localStorage.setItem('searchedString', keywords);
-          console.log(workspaces);
-          location.href = 'search.html';
-        } catch(error) {
-          console.log(error);
-        }
-        
 
-      };
+        try {
+            const workspaces = await WorkspaceStorage.find(keywordsAsArray);
+            console.log("beboop", workspaces);
+            const workspacesAsJsonString = JSON.stringify(workspaces);
+            localStorage.setItem('searchResults', workspacesAsJsonString);
+            localStorage.setItem('searchedString', keywords);
+            console.log(workspaces);
+            location.href = 'search.html';
+        } catch (error) {
+            console.log(error);
+        }
+
+
+    };
 
     const saveButton = document.getElementById('save-button');
     saveButton.addEventListener('click', saveWorkspace);
@@ -33,30 +35,31 @@ async function init() {
         if (user) {
             loadWorkspace();
         } else {
-           /**
-            * TODO:
-            * Force user to sign in.
-            */
+            /**
+             * TODO:
+             * Force user to sign in.
+             */
         }
     });
 }
 
 async function executeCodeOnBeagleBone() {
     const workspace = Blockly.getMainWorkspace();
+    const javascriptCode = Blockly.JavaScript.workspaceToCode(workspace);
     const requestParams = {
-        method : 'POST',
-        body : Blockly.JavaScript.workspaceToCode(workspace)
+        method: 'POST',
+        body: javascriptCode
     }
-    const response = await fetch(beagleBoneConfig.serverUrl, requestParams);
+    const response = await fetch(localHost, requestParams);
 
     if (response.ok) {
-        const jsonData = await response.json();
-        console.log(jsonData['response']);
-        document.getElementById("outputDiv").innerHTML = jsonData['response'];
-        document.getElementById("jsCodeDiv").innerHTML = javascriptCode;
-    }
-    else {
-        // display error
+        const outputResult = await response.json();
+
+        document.getElementById("outputDiv").innerHTML = outputResult.hasError ? 
+                outputResult.errorOutput : outputResult.programOutput;
+
+        document.getElementById("jsCodeDiv").innerHTML = js_beautify(javascriptCode);
+
     }
 }
 
@@ -77,7 +80,7 @@ async function saveWorkspace() {
 
     try {
         const blocks = getBlocks();
-        await WorkspaceStorage.put({ blocks: blocks , name: workspaceName });
+        await WorkspaceStorage.put({ blocks: blocks, name: workspaceName });
 
     } catch (error) {
 
@@ -111,8 +114,8 @@ function getBlocks() {
 }
 
 function validWorkspaceName(workspaceName) {
-    return workspaceName != "" && 
-    workspaceName != null;
+    return workspaceName != "" &&
+        workspaceName != null;
 }
 
 async function loadWorkspace() {
@@ -121,7 +124,8 @@ async function loadWorkspace() {
         toolbox: document.getElementById('toolbox')
     };
     const currentWorkspace = Blockly.inject('blocklyDiv', configs);
-
+    currentWorkspace.addChangeListener(displayCode);
+    
     const workspaceName = localStorage.getItem('workspaceName');
     const editingWorkspace = workspaceName != 'null';
 
@@ -131,4 +135,10 @@ async function loadWorkspace() {
         Blockly.Xml.domToWorkspace(blocksAsDom, currentWorkspace);
         document.getElementById("workspaceName").innerHTML = workspaceName;
     }
+}
+
+function displayCode() {
+    const currentWorkspace = Blockly.getMainWorkspace();
+    const javascriptCode = Blockly.JavaScript.workspaceToCode(currentWorkspace);
+    document.getElementById("jsCodeDiv").innerHTML = js_beautify(javascriptCode);
 }
