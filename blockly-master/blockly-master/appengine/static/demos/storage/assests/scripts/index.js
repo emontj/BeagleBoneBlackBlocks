@@ -1,5 +1,7 @@
 const SERVER_URL = config.beagleBone.serverUrl;
 const localHost = 'http://127.0.0.1:5050';
+
+
 document.addEventListener("DOMContentLoaded", init);
 
 async function init() {
@@ -50,7 +52,7 @@ async function executeCodeOnBeagleBone() {
         method: 'POST',
         body: javascriptCode
     }
-    const response = await fetch(localHost, requestParams);
+    const response = await fetch(SERVER_URL, requestParams);
 
     if (response.ok) {
         const outputResult = await response.json();
