@@ -259,11 +259,15 @@ Blockly.JavaScript['print'] = function(block) {
 
 };
 
+
 Blockly.Blocks['read_temp_cel'] = {
   init: function() {
     this.appendDummyInput()
-        .appendField("read temp (Celsius) from Pin #")
-        .appendField(new Blockly.FieldTextInput("P9_40"), "pin");
+        .setAlign(Blockly.ALIGN_RIGHT)
+        .appendField("read temperature (Celsius) from Pin #")
+        .appendField(new Blockly.FieldTextInput("P9_40"), "pin")
+        .appendField("into variable")
+        .appendField(new Blockly.FieldVariable("item"), "var");
     this.setOutput(true, null);
     this.setColour(230);
  this.setTooltip("");
@@ -273,11 +277,14 @@ Blockly.Blocks['read_temp_cel'] = {
 
 Blockly.JavaScript['read_temp_cel'] = function(block) {
   var pin_num = block.getFieldValue('pin');
+  var variable = Blockly.JavaScript.variableDB_.getName(block.getFieldValue('var'), Blockly.Variables.NAME_TYPE);
   // TODO: Assemble JavaScript into code variable.
-  var code = "b.analogRead("+pin_num+", printTemp); function printTemp(aRead) { var x = (aRead.value * 1800/1024); return 100*x -50; };"
+  var code = "b.analogRead("+pin_num+", printTemp); stopTimer = function() { clearInterval(timer);}; setTimeout(stopTimer, 3000);function printTemp(aRead) { var x = (aRead.value * 1800/1024);"+ variable+" =  100*x -50; };"
+
   // TODO: Change ORDER_NONE to the correct strength.
   return [code, Blockly.JavaScript.ORDER_NONE];
 };
+
 
 
 Blockly.Blocks['read_temp_far'] = {
