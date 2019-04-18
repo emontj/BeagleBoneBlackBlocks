@@ -307,17 +307,19 @@ Blockly.JavaScript['read_temp_far'] = function(block) {
   return [code, Blockly.JavaScript.ORDER_NONE];
 };
 
+
 Blockly.Blocks['move_servo'] = {
   init: function() {
     this.appendDummyInput()
+        .setAlign(Blockly.ALIGN_RIGHT)
         .appendField("set servo from pin #")
         .appendField(new Blockly.FieldTextInput("P9_40"), "pin")
         .appendField("to")
-        .appendField(new Blockly.FieldDropdown([["90","90"], ["180","180"], ["270","270"]]), "degree")
-        .appendField("degrees");
+        .appendField(new Blockly.FieldNumber(0, 0, 1), "NAME")
+        .appendField("duty cycle");
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
-    this.setColour(230);
+    this.setColour(300);
  this.setTooltip("");
  this.setHelpUrl("");
   }
@@ -325,8 +327,9 @@ Blockly.Blocks['move_servo'] = {
 
 Blockly.JavaScript['move_servo'] = function(block) {
   var pin = block.getFieldValue('pin');
-  var degree = block.getFieldValue('degree');
+  var duty_cycle = block.getFieldValue('NAME');
   // TODO: Assemble JavaScript into code variable.
-  var code = " b.pinMode(\""+pin+"\", b.ANALOG_OUTPUT); var duty_cycle = 1/18* "+degree+" + 2; b.analogWrite(\""+pin+"\", duty_cycle, 500);";
+  var code = " b.pinMode(\""+pin+"\", b.ANALOG_OUTPUT); var duty_cycle ="+duty_cycle+" + 2; b.analogWrite(\""+pin+"\", duty_cycle, 50, move); function move (){}";
+
   return code;
 };
