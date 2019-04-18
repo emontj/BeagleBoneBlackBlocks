@@ -279,7 +279,7 @@ Blockly.JavaScript['read_temp_cel'] = function(block) {
   var pin_num = block.getFieldValue('pin');
   var variable = Blockly.JavaScript.variableDB_.getName(block.getFieldValue('var'), Blockly.Variables.NAME_TYPE);
   // TODO: Assemble JavaScript into code variable.
-  var code = "b.analogRead("+pin_num+", printTemp); stopTimer = function() { clearInterval(timer);}; setTimeout(stopTimer, 3000);function printTemp(aRead) { var x = (aRead.value * 1800/1024);"+ variable+" =  100*x -50; };"
+  var code = "b.analogRead(\""+pin_num+"\", printTemp);  var currentTime = new Date().getTime(); while (currentTime + 3000 >= new Date().getTime()) {}function printTemp(aRead) { var x = (aRead.value * 1800/1024);"+ variable+" =  100*x -50; };"
 
   // TODO: Change ORDER_NONE to the correct strength.
   return [code, Blockly.JavaScript.ORDER_NONE];
@@ -327,8 +327,6 @@ Blockly.JavaScript['move_servo'] = function(block) {
   var pin = block.getFieldValue('pin');
   var degree = block.getFieldValue('degree');
   // TODO: Assemble JavaScript into code variable.
-  var code = " var b = require('bonescript'); b.pinMode("+pin+", b.ANALOG_OUTPUT); dutyCycle = 1/18* "+degree+" + 2; b.analogWrite("+pin+", duty_cycle, 500);";
+  var code = " b.pinMode(\""+pin+"\", b.ANALOG_OUTPUT); var duty_cycle = 1/18* "+degree+" + 2; b.analogWrite(\""+pin+"\", duty_cycle, 500);";
   return code;
 };
-
-

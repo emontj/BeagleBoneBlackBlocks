@@ -27,6 +27,9 @@ async function init() {
 
     };
 
+    const clearButton = document.getElementById('clear-button')
+    clearButton.addEventListener('click', clearWorkspace);
+
     const saveButton = document.getElementById('save-button');
     saveButton.addEventListener('click', saveWorkspace);
 
@@ -143,4 +146,9 @@ function displayCode() {
     const currentWorkspace = Blockly.getMainWorkspace();
     const javascriptCode = Blockly.JavaScript.workspaceToCode(currentWorkspace);
     document.getElementById("jsCodeDiv").innerHTML = js_beautify(javascriptCode);
+}
+
+function clearWorkspace() {
+    const workspace = Blockly.getMainWorkspace();
+    workspace.clear();
 }
