@@ -21,7 +21,9 @@ function responseToRequest(request, response) {
 
         getPostRequestData(request, function (code) {
 
-            fs.writeFile(CODE_FILE_PATH, code, function (error) {
+            const codeWithBonescirptIncluded = BONE_SCRIPT_REQUIRE_CODE + code;
+            
+            fs.writeFile(CODE_FILE_PATH, codeWithBonescirptIncluded, function (error) {
 
                 if (error) {
                     response.writeHead(INTERNAL_SERVER_ERROR, HEADERS);
