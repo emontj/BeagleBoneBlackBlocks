@@ -33,6 +33,9 @@ async function init() {
     const runButton = document.getElementById('run-button');
     runButton.addEventListener('click', executeCodeOnBeagleBone);
 
+    const downloadButton = document.getElementById('download-button');
+    downloadButton.addEventListener('click', downloadCode);
+
     firebase.auth().onAuthStateChanged(user => {
         if (user) {
             loadWorkspace();
@@ -143,4 +146,21 @@ function displayCode() {
     const currentWorkspace = Blockly.getMainWorkspace();
     const javascriptCode = Blockly.JavaScript.workspaceToCode(currentWorkspace);
     document.getElementById("jsCodeDiv").innerHTML = js_beautify(javascriptCode);
+}
+
+function downloadCode(){
+    const workspace = Blockly.getMainWorkspace();
+    const javascriptCode = Blockly.JavaScript.workspaceToCode(workspace);
+    // var blob = new Blob([javascriptCode], {type: "text/plain;charset=utf-8"});
+    // FileSaver.saveAs(blob, "hello world.txt");
+
+        try {
+            var b = new Blob([javascriptCode],{type:"text/plain;charset=utf-8"});
+            saveAs(b, "filename.txt");
+        } catch (e) {
+            window.open("data:"+"text/plain;charset=utf-8"+"," + encodeURIComponent(javascriptCode), '_blank','');
+        }
+
+// SaveAsFile("text","filename.txt","text/plain;charset=utf-8");
+    
 }

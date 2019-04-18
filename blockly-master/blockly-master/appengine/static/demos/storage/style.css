@@ -1,11 +1,10 @@
 body {
    
 	background-color: #ff4c98; 
-	background-image: url(computer-icon6.png),url(computer-keyboard2.jpg), url(color1.png);
-	background-size: 240px, 150px, 3000px;
-	background-position: 1140px 150px, 1185px 375px, 0.5px 500px;
 	background-repeat: no-repeat;
-
+	background-image: url(computer-icon6.png),url(computer-keyboard2.jpg), url(color1.png), url(mouse.png), url(circle.png);
+	background-size: 240px, 150px, 3000px, 70px, 330px;
+	background-position: 1140px 150px, 1185px 375px, 0.5px 500px, 1350px 375px, 1100px 150px;
 }		
 
 
