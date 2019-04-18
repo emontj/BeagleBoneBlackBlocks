@@ -158,6 +158,7 @@ Blockly.JavaScript['print_cel'] = function(block) {
   return code;
 };
 
+
 Blockly.Blocks['to_far'] = {
   init: function() {
     this.appendDummyInput()
@@ -256,6 +257,71 @@ Blockly.JavaScript['print'] = function(block) {
   (Blockly.JavaScript.valueToCode(block, "NAME", Blockly.JavaScript.ORDER_NONE) || "''") + ");\n";
   return code;
 
+};
+
+Blockly.Blocks['read_temp_cel'] = {
+  init: function() {
+    this.appendDummyInput()
+        .appendField("read temp (Celsius) from Pin #")
+        .appendField(new Blockly.FieldTextInput("P9_40"), "pin");
+    this.setOutput(true, null);
+    this.setColour(230);
+ this.setTooltip("");
+ this.setHelpUrl("");
+  }
+};
+
+Blockly.JavaScript['read_temp_cel'] = function(block) {
+  var pin_num = block.getFieldValue('pin');
+  // TODO: Assemble JavaScript into code variable.
+  var code = "b.analogRead("+pin_num+", printTemp); function printTemp(aRead) { var x = (aRead.value * 1800/1024); return 100*x -50; };"
+  // TODO: Change ORDER_NONE to the correct strength.
+  return [code, Blockly.JavaScript.ORDER_NONE];
+};
+
+
+Blockly.Blocks['read_temp_far'] = {
+  init: function() {
+    this.appendDummyInput()
+        .appendField("read temp (Celsius) from Pin #")
+        .appendField(new Blockly.FieldTextInput("P9_40"), "pin");
+    this.setOutput(true, null);
+    this.setColour(230);
+ this.setTooltip("");
+ this.setHelpUrl("");
+  }
+};
+
+Blockly.JavaScript['read_temp_far'] = function(block) {
+  var pin_num = block.getFieldValue('pin');
+  // TODO: Assemble JavaScript into code variable.
+  var code = "b.analogRead("+pin_num+", printTemp); function printTemp(aRead) { var x = (aRead.value * (1800/1024)); return ((100*x -50)*9/5)+32; };"
+  // TODO: Change ORDER_NONE to the correct strength.
+  return [code, Blockly.JavaScript.ORDER_NONE];
+};
+
+Blockly.Blocks['move_servo'] = {
+  init: function() {
+    this.appendDummyInput()
+        .appendField("set servo from pin #")
+        .appendField(new Blockly.FieldTextInput("P9_40"), "pin")
+        .appendField("to")
+        .appendField(new Blockly.FieldDropdown([["90","90"], ["180","180"], ["270","270"]]), "degree")
+        .appendField("degrees");
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(230);
+ this.setTooltip("");
+ this.setHelpUrl("");
+  }
+};
+
+Blockly.JavaScript['move_servo'] = function(block) {
+  var pin = block.getFieldValue('pin');
+  var degree = block.getFieldValue('degree');
+  // TODO: Assemble JavaScript into code variable.
+  var code = " var b = require('bonescript'); b.pinMode("+pin+", b.ANALOG_OUTPUT); dutyCycle = 1/18* "+degree+" + 2; b.analogWrite("+pin+", duty_cycle, 500);";
+  return code;
 };
 
 
