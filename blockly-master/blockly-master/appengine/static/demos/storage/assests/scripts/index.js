@@ -56,7 +56,7 @@ async function executeCodeOnBeagleBone() {
         const outputResult = await response.json();
 
         document.getElementById("outputDiv").innerHTML = outputResult.hasError ? 
-                outputResult.errorOutput : outputResult.programOutput;
+                outputResult.stderror : outputResult.stdout;
 
         document.getElementById("jsCodeDiv").innerHTML = js_beautify(javascriptCode);
 
@@ -125,7 +125,7 @@ async function loadWorkspace() {
     };
     const currentWorkspace = Blockly.inject('blocklyDiv', configs);
     currentWorkspace.addChangeListener(displayCode);
-    
+
     const workspaceName = localStorage.getItem('workspaceName');
     const editingWorkspace = workspaceName != 'null';
 
