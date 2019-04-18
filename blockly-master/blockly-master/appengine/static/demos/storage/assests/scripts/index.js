@@ -27,6 +27,9 @@ async function init() {
 
     };
 
+    const clearButton = document.getElementById('clear-button')
+    clearButton.addEventListener('click', clearWorkspace);
+
     const saveButton = document.getElementById('save-button');
     saveButton.addEventListener('click', saveWorkspace);
 
@@ -160,7 +163,10 @@ function downloadCode(){
         } catch (e) {
             window.open("data:"+"text/plain;charset=utf-8"+"," + encodeURIComponent(javascriptCode), '_blank','');
         }
+    }
 
-// SaveAsFile("text","filename.txt","text/plain;charset=utf-8");
     
+function clearWorkspace() {
+    const workspace = Blockly.getMainWorkspace();
+    workspace.clear();
 }

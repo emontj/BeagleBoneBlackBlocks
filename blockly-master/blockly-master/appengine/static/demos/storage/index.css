@@ -39,6 +39,12 @@ h1 {
 	font-family: Arial;
 }
 
+#clear-button{
+	background-color: white;
+	color: #FF006D; 
+	font-family: Arial;
+}
+
 #card1{
 	left: 650px;
 	height: 300px;
